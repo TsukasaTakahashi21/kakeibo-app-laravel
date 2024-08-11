@@ -34,4 +34,6 @@ Route::get('/show_create_income_sources', [incomeSourcesController::class, 'show
 Route::post('/income_sources', [incomeSourcesController::class, 'store'])->name('income_sources.store');
 
 // 収入源の編集
-Route::get('/show_edit_income_sources', [incomeSourcesController::class, 'show_edit_income_sources'])->name('show_edit_income_sources');
+Route::get('/show_edit_income_sources/{id}/edit', [incomeSourcesController::class, 'show_edit_income_sources'])->name('show_edit_income_sources');
+Route::put('/income_sources/{id}', [incomeSourcesController::class, 'update'])->name('income_sources.update');
+

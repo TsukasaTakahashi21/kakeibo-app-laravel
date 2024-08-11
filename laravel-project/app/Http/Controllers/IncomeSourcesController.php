@@ -20,10 +20,12 @@ class IncomeSourcesController extends Controller
         return view('incomes.create_income_sources');
     }
 
-    public function show_edit_income_sources()
+    public function show_edit_income_sources($id)
     {
-        return view('incomes.edit_income_sources');
+        $incomeSource = IncomeSource::findOrFail($id);
+        return view('incomes.edit_income_sources', compact('incomeSource'));
     }
+
 
 
     // 収入源の追加
@@ -45,6 +47,21 @@ class IncomeSourcesController extends Controller
         return redirect()->route('income_sources');
     }
 
+    public function update(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'income_source' => 'required|string|max:50',
+        ], [
+            'income_source.required' => '収入源が入力されていません',
+        ]);
+
+        $incomeSource = IncomeSource::findOrFail($id);
+        $incomeSource->name = $validatedData['income_source'];
+        $incomeSource->save();
+
+        return redirect()->route('income_sources');
+    }
+
     public function create()
     {
         //
@@ -61,10 +78,6 @@ class IncomeSourcesController extends Controller
         //
     }
 
-    public function update(Request $request, $id)
-    {
-
-    }
 
     public function destroy($id)
     {
