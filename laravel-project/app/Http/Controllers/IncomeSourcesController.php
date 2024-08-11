@@ -47,6 +47,7 @@ class IncomeSourcesController extends Controller
         return redirect()->route('income_sources');
     }
 
+    // 収入源の編集
     public function update(Request $request, $id)
     {
         $validatedData = $request->validate([
@@ -58,6 +59,15 @@ class IncomeSourcesController extends Controller
         $incomeSource = IncomeSource::findOrFail($id);
         $incomeSource->name = $validatedData['income_source'];
         $incomeSource->save();
+
+        return redirect()->route('income_sources');
+    }
+
+    // 収入源の削除
+    public function destroy($id)
+    {
+        $incomeSource = IncomeSource::findOrFail($id);
+        $incomeSource->delete();
 
         return redirect()->route('income_sources');
     }
@@ -74,12 +84,6 @@ class IncomeSourcesController extends Controller
     }
 
     public function edit($id)
-    {
-        //
-    }
-
-
-    public function destroy($id)
     {
         //
     }

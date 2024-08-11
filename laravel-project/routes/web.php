@@ -37,3 +37,7 @@ Route::post('/income_sources', [incomeSourcesController::class, 'store'])->name(
 Route::get('/show_edit_income_sources/{id}/edit', [incomeSourcesController::class, 'show_edit_income_sources'])->name('show_edit_income_sources');
 Route::put('/income_sources/{id}', [incomeSourcesController::class, 'update'])->name('income_sources.update');
 
+// 収入源の削除
+Route::delete('/income_sources/{id}', [incomeSourcesController::class, 'destroy'])->name('income_sources.destroy');
+
+
