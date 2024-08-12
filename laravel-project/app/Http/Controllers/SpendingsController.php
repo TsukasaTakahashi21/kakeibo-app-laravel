@@ -52,37 +52,46 @@ class SpendingsController extends Controller
     }
 
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
-        //
+        $spending = Spendings::FindOrFail($id);
+        $categories = Categories::where('user_id', Auth::id())->get();
+
+        return view('spendings.edit_spendings', compact('spending', 'categories'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
-        //
+        $validatedData = $request->validate([
+            'spending_name' => 'required|string|max: 50',
+            'category_name' => 'required|',
+            'amount' => 'required|integer',
+            'date' => 'required|date',
+        ], [
+            'spending_name.required' => '支出名が入力されていません',
+            'category_name.required' => 'カテゴリーが選択されていません',
+            'amount.required' => '金額が入力されていません',
+            'date.required' => '日付が入力されていません',
+        ]);
+
+        $userId = Auth::id();
+        $spending = Spendings::FindOrFail($id);
+        $spending->name = $validatedData['spending_name'];
+        $spending->category_id = $validatedData['category_name'];
+        $spending->amount =  $validatedData['amount'];
+        $spending->accrual_date = $validatedData['date'];
+        $spending->user_id = $userId;
+        $spending->save();
+
+        return redirect()->route('spendings.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function destroy($id)
     {
-        //
+        $spending = Spendings::FindOrFail($id);
+        $spending->delete();
+
+        return redirect()->route('spendings.index');
     }
 }

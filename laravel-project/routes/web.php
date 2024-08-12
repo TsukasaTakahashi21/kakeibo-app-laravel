@@ -68,3 +68,18 @@ Route::put('/categories/{id}', [CategoriesController::class, 'update'])->name('c
 
 // カテゴリーの削除
 Route::delete('/categories/{id}', [CategoriesController::class, 'destroy'])->name('categories.destroy');
+
+
+// 支出
+Route::get('/spendings', [SpendingsController::class, 'index'])->name('spendings.index');
+
+// 支出の追加
+Route::get('/create_spendings', [SpendingsController::class, 'create'])->name('spendings.create');
+Route::post('/spendings', [SpendingsController::class, 'store'])->name('spendings.store');
+
+// 支出の編集
+Route::get('/edit_spendings/{id}', [SpendingsController::class, 'edit'])->name('spendings.edit');
+Route::put('/spendings/{id}', [SpendingsController::class, 'update'])->name('spendings.update');
+
+// 支出の削除
+Route::delete('/spendings/{id}', [SpendingsController::class, 'destroy'])->name('spendings.destroy');
