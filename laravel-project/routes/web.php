@@ -47,4 +47,11 @@ Route::get('/incomes', [IncomesController::class, 'incomes'])->name('incomes');
 Route::get('/show_create_incomes', [IncomesController::class, 'show_create_incomes'])->name('show_create_incomes');
 Route::post('/incomes', [IncomesController::class, 'store'])->name('incomes.store');
 
+// 収入の編集
+Route::get('/show_edit_incomes/{id}', [IncomesController::class, 'show_edit_incomes'])->name('incomes.edit');
+Route::put('/incomes/{id}', [IncomesController::class, 'update'])->name('incomes.update');
+
+// 収入の削除
+Route::delete('/incomes/{id}', [IncomesController::class, 'destroy'])->name('incomes.destroy');
+
 

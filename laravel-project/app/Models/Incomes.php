@@ -17,4 +17,9 @@ class Incomes extends Model
         'amount',
         'accrual_date'
     ];
+
+    public function incomeSource()
+    {
+        return $this->belongsTo(IncomeSource::class, 'income_source_id');
+    }
 }

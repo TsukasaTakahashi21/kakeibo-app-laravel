@@ -47,6 +47,42 @@ class incomesController extends Controller
         return redirect()->route('incomes');
     }
 
+    public function show_edit_incomes($id)
+    {
+        $income = Incomes::findOrFail($id);
+        $incomeSources = IncomeSource::where('user_id', Auth::id())->get();
+        return view('incomes.edit_incomes', compact('income', 'incomeSources'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'income_source' => 'required|exists:income_sources,id',
+            'amount' => 'required|integer',
+            'date' => 'required|date',
+        ], [
+            'income_source.required' => '収入源が入力されていません',
+            'amount.required' => '金額が入力されていません',
+            'date.required' => '日付が入力されていません',
+        ]);
+
+        $income = Incomes::findOrFail($id);
+        $income->income_source_id = $validatedData['income_source'];
+        $income->amount = $validatedData['amount'];
+        $income->accrual_date = $validatedData['date'];
+        $income->save();
+
+        return redirect()->route('incomes');
+    }
+
+    public function destroy($id)
+    {
+        $income = Incomes::FindOrFail($id);
+        $income->delete();
+
+        return redirect()->route('incomes');
+    }
+
 
 
     public function create()
@@ -73,29 +109,6 @@ class incomesController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
     {
         //
     }
