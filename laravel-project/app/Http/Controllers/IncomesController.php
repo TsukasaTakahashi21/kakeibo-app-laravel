@@ -9,10 +9,31 @@ use Illuminate\Support\Facades\Auth;
 
 class incomesController extends Controller
 {
-    public function incomes()
+    public function incomes(Request $request)
     {
         $incomeSources = IncomeSource::where('user_id', Auth::id())->get();
-        $incomes = Incomes::where('user_id', Auth::id())->get();
+
+        $query = Incomes::where('user_id', Auth::id());
+
+        // 収入源による絞り込み
+        if ($request->filled('income_source')) {
+            $query->where('income_source_id', $request->input('income_source'));
+        }
+
+        // 日付による絞り込み
+        $startDate = $request->input('start-date');
+        $endDate = $request->input('end-date');
+
+        if ($startDate && $endDate)  {
+            $query->whereBetween('accrual_date', [$startDate, $endDate]);
+        } elseif ($startDate) {
+            $query->where('accrual_date', '>=', $startDate);
+        } elseif($endDate) {
+            $query->where('accrual_date', '>=', $endDate);
+        }
+
+        $incomes = $query->get();
+
         return view('incomes.incomes', compact('incomes', 'incomeSources'));
     }
 
