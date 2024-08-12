@@ -55,3 +55,16 @@ Route::put('/incomes/{id}', [IncomesController::class, 'update'])->name('incomes
 Route::delete('/incomes/{id}', [IncomesController::class, 'destroy'])->name('incomes.destroy');
 
 
+// カテゴリー
+Route::get('/categories', [CategoriesController::class, 'index'])->name('index');
+
+// カテゴリーの追加
+Route::get('/create_categories', [CategoriesController::class, 'create'])->name('create');
+Route::post('/categories', [CategoriesController::class, 'store'])->name('categories.store');
+
+// カテゴリーの編集
+Route::get('/edit_categories/{id}', [CategoriesController::class, 'edit'])->name('edit');
+Route::put('/categories/{id}', [CategoriesController::class, 'update'])->name('categories.update');
+
+// カテゴリーの削除
+Route::delete('/categories/{id}', [CategoriesController::class, 'destroy'])->name('categories.destroy');

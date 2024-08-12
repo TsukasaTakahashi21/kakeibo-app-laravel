@@ -11,7 +11,7 @@
       <ul class="nav-list">
         <li><a href="">HOME</a></li>
         <li><a href="{{ route('incomes') }}">収入TOP</a></li>
-        <li><a href="">支出TOP</a></li>
+        <li><a href="{{ route('index') }}">支出TOP</a></li>
         <li><a href="">ログアウト</a></li>
       </ul>
     </div>
