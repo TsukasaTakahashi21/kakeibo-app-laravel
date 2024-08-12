@@ -40,4 +40,11 @@ Route::put('/income_sources/{id}', [incomeSourcesController::class, 'update'])->
 // 収入源の削除
 Route::delete('/income_sources/{id}', [incomeSourcesController::class, 'destroy'])->name('income_sources.destroy');
 
+// 収入
+Route::get('/incomes', [IncomesController::class, 'incomes'])->name('incomes');
+
+// 収入の追加
+Route::get('/show_create_incomes', [IncomesController::class, 'show_create_incomes'])->name('show_create_incomes');
+Route::post('/incomes', [IncomesController::class, 'store'])->name('incomes.store');
+
 
