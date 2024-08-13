@@ -10,10 +10,31 @@ use Illuminate\Support\Facades\Auth;
 class SpendingsController extends Controller
 {
     
-    public function index()
+    public function index(Request $request)
     {
-        $spendings = Spendings::where('user_id', Auth::id())->get();
-        $categories = Categories::all();
+        $userId = Auth::id();
+        $query = Spendings::where('user_id', $userId);
+
+        // カテゴリーによる絞り込み
+        if ($request->filled('category')) {
+            $query->where('category_id', $request->input('category'));
+        }
+
+        // 日付による絞り込み
+        $startDate = $request->input('start-date');
+        $endDate = $request->input('end-date');
+
+        if ($startDate && $endDate)  {
+            $query->whereBetween('accrual_date', [$startDate, $endDate]);
+        } elseif ($startDate) {
+            $query->where('accrual_date', '>=', $startDate);
+        } elseif($endDate) {
+            $query->where('accrual_date', '>=', $endDate);
+        }
+
+        $spendings = $query->get();
+        $categories = Categories::where('user_id', $userId)->get();
+        
         return view('spendings.spendings', compact('spendings', 'categories'));
     }
 
@@ -54,7 +75,8 @@ class SpendingsController extends Controller
 
     public function edit($id)
     {
-        $spending = Spendings::FindOrFail($id);
+        $userId = Auth::id();
+        $spending = Spendings::where('id', $id)->where('user_id', $userId)->firstOrFail($id);
         $categories = Categories::where('user_id', Auth::id())->get();
 
         return view('spendings.edit_spendings', compact('spending', 'categories'));
@@ -62,6 +84,9 @@ class SpendingsController extends Controller
 
     public function update(Request $request, $id)
     {
+        $userId = Auth::id();
+        $spending = Spendings::where('id', $id)->where('user_id', $userId)->firstOrFail($id);
+
         $validatedData = $request->validate([
             'spending_name' => 'required|string|max: 50',
             'category_name' => 'required|',
@@ -74,8 +99,6 @@ class SpendingsController extends Controller
             'date.required' => '日付が入力されていません',
         ]);
 
-        $userId = Auth::id();
-        $spending = Spendings::FindOrFail($id);
         $spending->name = $validatedData['spending_name'];
         $spending->category_id = $validatedData['category_name'];
         $spending->amount =  $validatedData['amount'];
@@ -86,10 +109,11 @@ class SpendingsController extends Controller
         return redirect()->route('spendings.index');
     }
 
-    
+
     public function destroy($id)
     {
-        $spending = Spendings::FindOrFail($id);
+        $userId = Auth::id();
+        $spending = Spendings::where('id', $id)->where('user_id', $userId)->firstOrFail($id);
         $spending->delete();
 
         return redirect()->route('spendings.index');
