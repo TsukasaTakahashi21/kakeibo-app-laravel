@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Support\Facades\Redis;
 
+use App\UseCase\User\SignUpInput;
+use App\UseCase\User\SignUpInteractor;
+use App\UseCase\User\SignInInput;
+use App\UseCase\User\SignInInteractor;
+
 class UserController extends Controller
 {
 
@@ -31,7 +36,7 @@ class UserController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|string|max:30',
-            'email' => 'required|string|email|max:50|unique:users,email',
+            'email' => 'required|string|email|max:50',
             'password' => 'required|string|min:6|confirmed',
         ], [
             'name.required' => 'UserNameの入力がありません',
@@ -54,39 +59,57 @@ class UserController extends Controller
 
     public function register(Request $request)
     {
-        $userName = session('name');
-        $email = session('email');
+        if (!session()->has(['name', 'email'])) {
+            return redirect()->route('signUp')->withErrors([
+                'register_error' => '会員登録情報が無効です。再度入力してください。'
+            ]);
+        }
 
-        // パスワードのハッシュ化
-        $hashedPassword = Hash::make(session('password'));
-
-        // ユーザーの作成・保存
-        $user = new User();
-        $user->name = $userName;
-        $user->email = $email;
-        $user->password = $hashedPassword;
-        $user->save();
-        
-        $request->session()->flush();
-
-        return redirect()->route('signIn');
+        try {
+            $input = new SignUpInput(
+                session('name'),
+                session('email'),
+                $request->input('password'),
+            );
+    
+            $interactor = new SignUpInteractor();
+            $interactor->handle($input);
+    
+            $request->session()->flush();
+    
+            return redirect()->route('signIn');
+        } catch (\Exception $e) {
+            return redirect()->route('signUp_confirm')->withErrors(['register_error' => $e->getMessage()]);  
+        }
     }
 
 
     public function login(Request $request)
     {
-        $loginData = $request->only('email', 'password');
+        $validatedData = $request->validate([
+            'email' => 'required|string|email|max:50',
+            'password' => 'required|string|min:6',
+        ], [
+            'email.required' => 'メールアドレスを入力してください',
+            'password.required' => 'パスワードを入力してください',
+        ]);
 
-        if (!Auth::attempt($loginData)) {
-            return redirect()->back()->withErrors([
-                'email' => '認証に失敗しました。',
-            ]);
+        $input = new SignInInput(
+            $validatedData['email'],
+            $validatedData['password'],
+        );
+
+        $interactor = new SignInInteractor();
+        if (!$interactor->handle($input)) {
+            return redirect()->route('signUp')->withErrors([
+                'login_error' => 'メールアドレスまたはパスワードが違います'
+            ])->withInput();
         }
 
         return redirect()->intended('top');
     }
 
-    
+
     public function logout()
     {
         Auth::logout();
