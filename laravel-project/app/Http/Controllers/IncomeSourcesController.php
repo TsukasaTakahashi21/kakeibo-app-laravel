@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Auth;
 
 use App\UseCase\Income_Sources\CreateInput;
 use App\UseCase\Income_Sources\CreateInteractor;
+use App\UseCase\Income_Sources\deleteInteractor;
+use App\UseCase\Income_Sources\EditInput;
+use App\UseCase\Income_Sources\EditInteractor;
 
 class IncomeSourcesController extends Controller
 {
@@ -49,7 +52,7 @@ class IncomeSourcesController extends Controller
         return redirect()->route('income_sources');
     }
 
-    
+
     // 収入源の編集
     public function update(Request $request, $id)
     {
@@ -59,9 +62,9 @@ class IncomeSourcesController extends Controller
             'income_source.required' => '収入源が入力されていません',
         ]);
 
-        $incomeSource = IncomeSource::findOrFail($id);
-        $incomeSource->name = $validatedData['income_source'];
-        $incomeSource->save();
+        $input = new EditInput($id, $validatedData['income_source']);
+        $interactor = new EditInteractor();
+        $interactor->handle($input);
 
         return redirect()->route('income_sources');
     }
@@ -69,25 +72,9 @@ class IncomeSourcesController extends Controller
     // 収入源の削除
     public function destroy($id)
     {
-        $incomeSource = IncomeSource::findOrFail($id);
-        $incomeSource->delete();
+        $interactor = new deleteInteractor();
+        $interactor->handle($id);
 
         return redirect()->route('income_sources');
-    }
-
-    public function create()
-    {
-        //
-    }
-
-
-    public function show($id)
-    {
-        //
-    }
-
-    public function edit($id)
-    {
-        //
     }
 }
