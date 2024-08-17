@@ -12,6 +12,9 @@ use App\UseCase\Incomes\CreateInteractor;
 use App\UseCase\Incomes\EditInput;
 use App\UseCase\Incomes\EditInteractor;
 use App\UseCase\Incomes\DeleteInteractor;
+use App\UseCase\Incomes\FilterInput;
+use App\UseCase\Incomes\FilterInteractor;
+
 
 class incomesController extends Controller
 {
@@ -19,26 +22,14 @@ class incomesController extends Controller
     {
         $incomeSources = IncomeSource::where('user_id', Auth::id())->get();
 
-        $query = Incomes::where('user_id', Auth::id());
+        $input = new FilterInput(
+            $request->input('income_source'),
+            $request->input('start-date'),
+            $request->input('end-date')
+        );
 
-        // 収入源による絞り込み
-        if ($request->filled('income_source')) {
-            $query->where('income_source_id', $request->input('income_source'));
-        }
-
-        // 日付による絞り込み
-        $startDate = $request->input('start-date');
-        $endDate = $request->input('end-date');
-
-        if ($startDate && $endDate)  {
-            $query->whereBetween('accrual_date', [$startDate, $endDate]);
-        } elseif ($startDate) {
-            $query->where('accrual_date', '>=', $startDate);
-        } elseif($endDate) {
-            $query->where('accrual_date', '<=', $endDate);
-        }
-
-        $incomes = $query->get();
+        $interactor = new FilterInteractor();
+        $incomes = $interactor->handle($input);
 
         return view('incomes.incomes', compact('incomes', 'incomeSources'));
     }
