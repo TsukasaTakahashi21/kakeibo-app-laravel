@@ -7,6 +7,9 @@ use App\Models\Categories;
 use Illuminate\Support\Facades\Auth;
 use App\UseCase\Categories\CreateInput;
 use App\UseCase\Categories\CreateInteractor;
+use App\UseCase\Categories\EditInput;
+use App\UseCase\Categories\EditInteractor;
+use App\UseCase\Categories\DeleteInteractor;
 
 class CategoriesController extends Controller
 {
@@ -45,7 +48,8 @@ class CategoriesController extends Controller
 
     public function edit($id)
     {
-        $category = categories::where('id', $id)->where('user_id', Auth::id())->firstOrFail($id);
+        $category = categories::where('id', $id)
+                                ->where('user_id', Auth::id())->firstOrFail();
         return view('spendings.edit_categories', compact('category'));
     }
 
@@ -58,9 +62,9 @@ class CategoriesController extends Controller
             'category_name.unique' => 'すでに登録済みのカテゴリです',
         ]);
 
-        $category = Categories::where('id', $id)->where('user_id', Auth::id())->firstOrFail($id);
-        $category->name = $validatedData['category_name'];
-        $category->save();
+        $input = new EditInput($validatedData['category_name'], $id);
+        $interactor = new EditInteractor();
+        $interactor->handle($input);
 
         return redirect()->route('index');
     }
@@ -68,9 +72,8 @@ class CategoriesController extends Controller
 
     public function destroy($id)
     {
-        $category = Categories::where('id', $id)->where('user_id', Auth::id())->firstOrFail($id);
-        $category->delete();
-
+        $interactor = new deleteInteractor();
+        $interactor->handle($id);
         return redirect()->route('index');
     }
 }
