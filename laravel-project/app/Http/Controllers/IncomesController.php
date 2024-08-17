@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Auth;
 
 use App\UseCase\Incomes\CreateInput;
 use App\UseCase\Incomes\CreateInteractor;
+use App\UseCase\Incomes\EditInput;
+use App\UseCase\Incomes\EditInteractor;
+use App\UseCase\Incomes\DeleteInteractor;
 
 class incomesController extends Controller
 {
@@ -70,10 +73,10 @@ class incomesController extends Controller
 
         $interactor = new CreateInteractor();
         $interactor->handle($input);
-        
+
         return redirect()->route('incomes');
     }
-    
+
 
     public function show_edit_incomes($id)
     {
@@ -81,6 +84,7 @@ class incomesController extends Controller
         $incomeSources = IncomeSource::where('user_id', Auth::id())->get();
         return view('incomes.edit_incomes', compact('income', 'incomeSources'));
     }
+
 
     public function update(Request $request, $id)
     {
@@ -94,50 +98,24 @@ class incomesController extends Controller
             'date.required' => '日付が入力されていません',
         ]);
 
-        $income = Incomes::findOrFail($id);
-        $income->income_source_id = $validatedData['income_source'];
-        $income->amount = $validatedData['amount'];
-        $income->accrual_date = $validatedData['date'];
-        $income->save();
+        $input = new EditInput(
+            $id,
+            $validatedData['income_source'],
+            $validatedData['amount'],
+            $validatedData['date'],
+        );
+
+        $interactor = new EditInteractor();
+        $interactor->handle($input);
 
         return redirect()->route('incomes');
     }
 
     public function destroy($id)
     {
-        $income = Incomes::FindOrFail($id);
-        $income->delete();
+        $interactor = new deleteInteractor;
+        $interactor->handle($id);
 
         return redirect()->route('incomes');
-    }
-
-
-
-    public function create()
-    {
-        //
-    }
-
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 }
