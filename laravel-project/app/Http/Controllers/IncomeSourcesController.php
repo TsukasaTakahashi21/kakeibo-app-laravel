@@ -5,6 +5,9 @@ use Illuminate\Http\Request;
 use App\Models\IncomeSource; 
 use Illuminate\Support\Facades\Auth;
 
+use App\UseCase\Income_Sources\CreateInput;
+use App\UseCase\Income_Sources\CreateInteractor;
+
 class IncomeSourcesController extends Controller
 {
     public function income_sources()
@@ -39,14 +42,14 @@ class IncomeSourcesController extends Controller
 
         $userId = Auth::id();
 
-        $incomeSource = new IncomeSource();
-        $incomeSource->name = $validatedData['income_source'];
-        $incomeSource->user_id = $userId;
-        $incomeSource->save();
+        $input = new CreateInput($validatedData['income_source'], $userId);
+        $interactor = new CreateInteractor();
+        $interactor->handle($input);
 
         return redirect()->route('income_sources');
     }
 
+    
     // 収入源の編集
     public function update(Request $request, $id)
     {
