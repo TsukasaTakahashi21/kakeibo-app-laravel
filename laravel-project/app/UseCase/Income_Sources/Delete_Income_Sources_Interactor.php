@@ -4,7 +4,7 @@ namespace App\UseCase\Income_Sources;
 use App\Models\IncomeSource;
 use Illuminate\Support\Facades\Auth;
 
-class deleteInteractor
+class delete_Income_Sources_Interactor
 {
   public function handle(int $id)
   {

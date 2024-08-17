@@ -1,7 +1,7 @@
 <?php
 namespace App\UseCase\Categories;
 
-class CreateInput
+class Create_Categories_Input
 {
   private int $userId;
   private string $categoryName;

@@ -1,7 +1,7 @@
 <?php
 namespace App\UseCase\Categories;
 
-class EditInput
+class Edit_Categories_Input
 {
   private string $categoryName;
   private int $id;

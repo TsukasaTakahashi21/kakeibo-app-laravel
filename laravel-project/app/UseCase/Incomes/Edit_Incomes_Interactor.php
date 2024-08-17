@@ -1,18 +1,17 @@
 <?php
 namespace App\UseCase\Incomes;
 
-use App\UseCase\Incomes\CreateInput;
+use App\UseCase\Incomes\Edit_incomes_Input;
 use App\Models\Incomes;
 
-class CreateInteractor
+class Edit_incomes_Interactor
 {
-  public function handle(CreateInput $input)
+  public function handle(Edit_incomes_Input $input)
   {
-    $income = new Incomes();
+    $income = Incomes::findOrFail($input->getId());
     $income->income_source_id = $input->getIncomeSourceId();
     $income->amount = $input->getAmount();
     $income->accrual_date = $input->getDate();
-    $income->user_id = $input->getUserId();
     $income->save();
   }
 }

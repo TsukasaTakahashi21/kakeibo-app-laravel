@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\spendings;
 use App\Models\categories;
 use Illuminate\Support\Facades\Auth;
+use App\UseCase\Spendings\Create_Spendings_Input;
+use App\UseCase\Spendings\Create_Spendings_Interactor;
 
 class SpendingsController extends Controller
 {
@@ -61,13 +63,16 @@ class SpendingsController extends Controller
         ]);
 
         $userId = Auth::id();
-        $spendings = new Spendings();
-        $spendings->name = $validatedData['spending_name'];
-        $spendings->category_id = $validatedData['category_name'];
-        $spendings->amount =  $validatedData['amount'];
-        $spendings->accrual_date = $validatedData['date'];
-        $spendings->user_id = $userId;
-        $spendings->save();
+        $input = new Create_Spendings_Input(
+            $validatedData['spending_name'],
+            $validatedData['category_name'],
+            $validatedData['amount'],
+            $validatedData['date'],
+            $userId
+        );
+
+        $interactor = new Create_Spendings_Interactor();
+        $interactor->handle($input);
 
         return redirect()->route('spendings.index');
     }
