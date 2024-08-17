@@ -7,6 +7,9 @@ use App\Models\Incomes;
 use App\Models\IncomeSource;
 use Illuminate\Support\Facades\Auth;
 
+use App\UseCase\Incomes\CreateInput;
+use App\UseCase\Incomes\CreateInteractor;
+
 class incomesController extends Controller
 {
     public function incomes(Request $request)
@@ -58,15 +61,19 @@ class incomesController extends Controller
 
         $userId = Auth::id();
 
-        $income = new Incomes();
-        $income->income_source_id = $validatedData['income_source'];
-        $income->amount = $validatedData['amount'];
-        $income->accrual_date = $validatedData['date'];
-        $income->user_id = $userId;
-        $income->save();
+        $input = new CreateInput(
+            $validatedData['income_source'],
+            $validatedData['amount'],
+            $validatedData['date'],
+            $userId
+        );
 
+        $interactor = new CreateInteractor();
+        $interactor->handle($input);
+        
         return redirect()->route('incomes');
     }
+    
 
     public function show_edit_incomes($id)
     {
