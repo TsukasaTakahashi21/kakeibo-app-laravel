@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Categories;
 use Illuminate\Support\Facades\Auth;
+use App\UseCase\Categories\CreateInput;
+use App\UseCase\Categories\CreateInteractor;
 
 class CategoriesController extends Controller
 {
@@ -22,10 +24,10 @@ class CategoriesController extends Controller
         return view('spendings.create_categories');
     }
 
-    public function store(Request $request, $id)
+    public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'category_name' => 'required|string|max:50|unique:categories,name' . $id,
+            'category_name' => 'required|string|max:50|unique:categories,name',
         ], [
             'category_name.required' => 'カテゴリ名が入力されていません',
             'category_name.unique' => 'すでに登録済みのカテゴリです',
@@ -33,10 +35,9 @@ class CategoriesController extends Controller
 
         $userId = Auth::id();
 
-        $category = new Categories();
-        $category->name = $validatedData['category_name'];
-        $category->user_id = $userId;
-        $category->save();
+        $input = new CreateInput($validatedData['category_name'], $userId);
+        $interactor = new CreateInteractor();
+        $interactor->handle($input);
 
         return redirect()->route('index');
     }
