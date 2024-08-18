@@ -8,6 +8,9 @@ use App\Models\categories;
 use Illuminate\Support\Facades\Auth;
 use App\UseCase\Spendings\Create_Spendings_Input;
 use App\UseCase\Spendings\Create_Spendings_Interactor;
+use App\UseCase\Spendings\Edit_Spendings_Input;
+use App\UseCase\Spendings\Edit_Spendings_Interactor;
+use App\UseCase\Spendings\Delete_Spendings_Interactor;
 
 class SpendingsController extends Controller
 {
@@ -81,7 +84,7 @@ class SpendingsController extends Controller
     public function edit($id)
     {
         $userId = Auth::id();
-        $spending = Spendings::where('id', $id)->where('user_id', $userId)->firstOrFail($id);
+        $spending = Spendings::where('id', $id)->where('user_id', $userId)->firstOrFail();
         $categories = Categories::where('user_id', Auth::id())->get();
 
         return view('spendings.edit_spendings', compact('spending', 'categories'));
@@ -90,7 +93,6 @@ class SpendingsController extends Controller
     public function update(Request $request, $id)
     {
         $userId = Auth::id();
-        $spending = Spendings::where('id', $id)->where('user_id', $userId)->firstOrFail($id);
 
         $validatedData = $request->validate([
             'spending_name' => 'required|string|max: 50',
@@ -104,12 +106,17 @@ class SpendingsController extends Controller
             'date.required' => '日付が入力されていません',
         ]);
 
-        $spending->name = $validatedData['spending_name'];
-        $spending->category_id = $validatedData['category_name'];
-        $spending->amount =  $validatedData['amount'];
-        $spending->accrual_date = $validatedData['date'];
-        $spending->user_id = $userId;
-        $spending->save();
+        $input = new Edit_Spendings_Input(
+            $id,
+            $validatedData['spending_name'],
+            $validatedData['category_name'],
+            $validatedData['amount'],
+            $validatedData['date'],
+            $userId
+        );
+
+        $interactor = new Edit_Spendings_Interactor();
+        $interactor->handle($input);
 
         return redirect()->route('spendings.index');
     }
@@ -117,9 +124,8 @@ class SpendingsController extends Controller
 
     public function destroy($id)
     {
-        $userId = Auth::id();
-        $spending = Spendings::where('id', $id)->where('user_id', $userId)->firstOrFail($id);
-        $spending->delete();
+        $interactor = new Delete_Spendings_Interactor();
+        $interactor->handle($id);
 
         return redirect()->route('spendings.index');
     }
