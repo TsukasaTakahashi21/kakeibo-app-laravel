@@ -23,7 +23,7 @@ Route::get('/signIn', [UserController::class, 'signIn'])->name('signIn');
 Route::post('/login', [UserController::class, 'login'])->name('login');
 
 // ログアウト
-Route::get('/logout', [UserController::class, 'logout'])->name('logout');
+Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
 
 // Topページ
