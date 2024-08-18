@@ -11,33 +11,24 @@ use App\UseCase\Spendings\Create_Spendings_Interactor;
 use App\UseCase\Spendings\Edit_Spendings_Input;
 use App\UseCase\Spendings\Edit_Spendings_Interactor;
 use App\UseCase\Spendings\Delete_Spendings_Interactor;
+use App\UseCase\Spendings\Filter_Spendings_Input;
+use App\UseCase\Spendings\Filter_Spendings_Interactor;
 
 class SpendingsController extends Controller
 {
-    
     public function index(Request $request)
     {
         $userId = Auth::id();
-        $query = Spendings::where('user_id', $userId);
 
-        // カテゴリーによる絞り込み
-        if ($request->filled('category')) {
-            $query->where('category_id', $request->input('category'));
-        }
+        $input = new Filter_Spendings_Input(
+            $request->input('category'),
+            $request->input('start-date'),
+            $request->input('end-date')
+        );
 
-        // 日付による絞り込み
-        $startDate = $request->input('start-date');
-        $endDate = $request->input('end-date');
+        $interactor = new Filter_Spendings_Interactor();
+        $spendings = $interactor->handle($input);
 
-        if ($startDate && $endDate)  {
-            $query->whereBetween('accrual_date', [$startDate, $endDate]);
-        } elseif ($startDate) {
-            $query->where('accrual_date', '>=', $startDate);
-        } elseif($endDate) {
-            $query->where('accrual_date', '<=', $endDate);
-        }
-
-        $spendings = $query->get();
         $categories = Categories::where('user_id', $userId)->get();
         
         return view('spendings.spendings', compact('spendings', 'categories'));
