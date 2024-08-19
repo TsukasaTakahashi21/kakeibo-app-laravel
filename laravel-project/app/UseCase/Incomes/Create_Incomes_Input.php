@@ -1,14 +1,16 @@
 <?php
 namespace App\UseCase\Incomes;
 
+use App\ValueObject\Amount;
+
 class Create_incomes_Input
 {
   private string $incomeSourceId;
-  private string $amount;
+  private Amount $amount;
   private string $date;
   private int $userId;
 
-  public function __construct(string $incomeSourceId, string $amount, string $date, int $userId)
+  public function __construct(string $incomeSourceId, Amount $amount, string $date, int $userId)
   {
     $this->incomeSourceId = $incomeSourceId;
     $this->amount = $amount;
@@ -21,7 +23,7 @@ class Create_incomes_Input
     return $this->incomeSourceId;
   }
 
-  public function getAmount(): string
+  public function getAmount(): Amount
   {
     return $this->amount;
   }

@@ -13,6 +13,9 @@ use App\UseCase\Spendings\Edit_Spendings_Interactor;
 use App\UseCase\Spendings\Delete_Spendings_Interactor;
 use App\UseCase\Spendings\Filter_Spendings_Input;
 use App\UseCase\Spendings\Filter_Spendings_Interactor;
+use App\ValueObject\SpendingName;
+use App\ValueObject\CategoryName;
+use App\ValueObject\Amount;
 
 class SpendingsController extends Controller
 {
@@ -57,10 +60,13 @@ class SpendingsController extends Controller
         ]);
 
         $userId = Auth::id();
+        $spendingName = new SpendingName($validatedData['spending_name']);
+        $amount = new Amount($validatedData['amount']);
+        
         $input = new Create_Spendings_Input(
-            $validatedData['spending_name'],
+            $spendingName,
             $validatedData['category_name'],
-            $validatedData['amount'],
+            $amount,
             $validatedData['date'],
             $userId
         );
@@ -97,11 +103,14 @@ class SpendingsController extends Controller
             'date.required' => '日付が入力されていません',
         ]);
 
+        $spendingName = new SpendingName($validatedData['spending_name']);
+        $amount = new Amount($validatedData['amount']);
+
         $input = new Edit_Spendings_Input(
             $id,
-            $validatedData['spending_name'],
+            $spendingName,
             $validatedData['category_name'],
-            $validatedData['amount'],
+            $amount,
             $validatedData['date'],
             $userId
         );

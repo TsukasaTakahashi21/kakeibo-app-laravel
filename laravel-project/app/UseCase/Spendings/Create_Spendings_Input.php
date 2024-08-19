@@ -1,15 +1,18 @@
 <?php
 namespace App\UseCase\Spendings;
 
+use App\ValueObject\Amount;
+use App\ValueObject\SpendingName;
+
 class Create_Spendings_Input
 {
-  private string $spendingName;
+  private SpendingName $spendingName;
   private int $categoryId;
-  private string $amount;
+  private Amount $amount;
   private string $date;
   private int $userId;
 
-  public function __construct(string $spendingName, int $categoryId, string $amount, string $date,  int $userId)
+  public function __construct(SpendingName $spendingName, int $categoryId, Amount $amount, string $date,  int $userId)
   {
     $this->spendingName = $spendingName;
     $this->categoryId = $categoryId;
@@ -18,7 +21,7 @@ class Create_Spendings_Input
     $this->userId = $userId;
   }
 
-  public function getSpendingName(): string
+  public function getSpendingName(): SpendingName
     {
       return $this->spendingName;
     }
@@ -28,7 +31,7 @@ class Create_Spendings_Input
       return $this->categoryId;
     }
 
-    public function getAmount(): string
+    public function getAmount(): Amount
     {
       return $this->amount;
     }
