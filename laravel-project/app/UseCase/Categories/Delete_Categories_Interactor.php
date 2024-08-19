@@ -4,7 +4,7 @@ namespace App\UseCase\Categories;
 use App\Models\categories;
 use Illuminate\Support\Facades\Auth;
 
-class DeleteInteractor
+class Delete_Categories_Interactor
 {
   public function handle($id)
   {

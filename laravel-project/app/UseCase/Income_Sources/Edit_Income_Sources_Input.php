@@ -1,7 +1,7 @@
 <?php
 namespace App\UseCase\Income_Sources;
 
-class EditInput
+class Edit_Income_Sources_Input
 {
   private string $incomeSource;
   private int $id;

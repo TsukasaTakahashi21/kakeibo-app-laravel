@@ -1,12 +1,12 @@
 <?php
 namespace App\UseCase\Categories;
 
-use App\UseCase\Categories\EditInput;
+use App\UseCase\Categories\Edit_Categories_Input;
 use App\Models\categories;
 
-class EditInteractor 
+class Edit_Categories_Interactor 
 {
-  public function handle(EditInput $input)
+  public function handle(Edit_Categories_Input $input)
   {
     $category = Categories::findOrFail($input->getId());
     $category->name = $input->getCategoryName();

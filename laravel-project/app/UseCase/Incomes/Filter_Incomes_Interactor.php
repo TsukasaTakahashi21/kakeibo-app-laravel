@@ -1,13 +1,13 @@
 <?php
 namespace App\UseCase\Incomes;
 
-use App\UseCase\Incomes\FilterInput;
+use App\UseCase\Incomes\Filter_Incomes_Input;
 use App\Models\Incomes;
 use Illuminate\Support\Facades\Auth;
 
-class FilterInteractor
+class Filter_Incomes_Interactor
 {
-  public function handle(FilterInput $input)
+  public function handle(Filter_Incomes_Input $input)
   {
     $query = Incomes::where('user_id', Auth::id());
 

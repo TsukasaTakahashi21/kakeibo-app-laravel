@@ -1,19 +1,24 @@
 <?php
 namespace App\UseCase\Incomes;
 
-class CreateInput
+class Edit_incomes_Input
 {
+  private int $id;
   private string $incomeSourceId;
   private string $amount;
   private string $date;
-  private int $userId;
 
-  public function __construct(string $incomeSourceId, string $amount, string $date, int $userId)
+  public function __construct(int $id, string $incomeSourceId, string $amount, string $date)
   {
     $this->incomeSourceId = $incomeSourceId;
     $this->amount = $amount;
     $this->date = $date;
-    $this->userId = $userId;
+    $this->id = $id;
+  }
+
+  public function getId(): int
+  {
+      return $this->id;
   }
 
   public function getIncomeSourceId(): string
@@ -31,8 +36,4 @@ class CreateInput
     return $this->date;
   }
 
-  public function getUserId(): int
-    {
-        return $this->userId;
-    }
 }

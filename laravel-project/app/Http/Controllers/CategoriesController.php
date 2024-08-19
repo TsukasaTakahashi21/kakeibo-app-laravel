@@ -5,11 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Categories;
 use Illuminate\Support\Facades\Auth;
-use App\UseCase\Categories\CreateInput;
-use App\UseCase\Categories\CreateInteractor;
-use App\UseCase\Categories\EditInput;
-use App\UseCase\Categories\EditInteractor;
-use App\UseCase\Categories\DeleteInteractor;
+use App\UseCase\Categories\Create_Categories_Input;
+use App\UseCase\Categories\Create_Categories_Interactor;
+use App\UseCase\Categories\Edit_Categories_Input;
+use App\UseCase\Categories\Edit_Categories_Interactor;
+use App\UseCase\Categories\Delete_Categories_Interactor;
 
 class CategoriesController extends Controller
 {
@@ -38,8 +38,8 @@ class CategoriesController extends Controller
 
         $userId = Auth::id();
 
-        $input = new CreateInput($validatedData['category_name'], $userId);
-        $interactor = new CreateInteractor();
+        $input = new Create_Categories_Input($validatedData['category_name'], $userId);
+        $interactor = new Create_Categories_Interactor();
         $interactor->handle($input);
 
         return redirect()->route('index');
@@ -62,8 +62,8 @@ class CategoriesController extends Controller
             'category_name.unique' => 'すでに登録済みのカテゴリです',
         ]);
 
-        $input = new EditInput($validatedData['category_name'], $id);
-        $interactor = new EditInteractor();
+        $input = new Edit_Categories_Input($validatedData['category_name'], $id);
+        $interactor = new Edit_Categories_Interactor();
         $interactor->handle($input);
 
         return redirect()->route('index');
@@ -72,7 +72,7 @@ class CategoriesController extends Controller
 
     public function destroy($id)
     {
-        $interactor = new deleteInteractor();
+        $interactor = new delete_Categories_Interactor();
         $interactor->handle($id);
         return redirect()->route('index');
     }

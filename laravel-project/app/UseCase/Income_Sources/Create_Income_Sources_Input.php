@@ -1,7 +1,7 @@
 <?php
 namespace App\UseCase\Income_Sources;
 
-class CreateInput
+class Create_Income_Sources_Input
 {
   private string $incomeSource;
   private int $userId;

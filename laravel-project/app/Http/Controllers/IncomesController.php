@@ -7,13 +7,13 @@ use App\Models\Incomes;
 use App\Models\IncomeSource;
 use Illuminate\Support\Facades\Auth;
 
-use App\UseCase\Incomes\CreateInput;
-use App\UseCase\Incomes\CreateInteractor;
-use App\UseCase\Incomes\EditInput;
-use App\UseCase\Incomes\EditInteractor;
-use App\UseCase\Incomes\DeleteInteractor;
-use App\UseCase\Incomes\FilterInput;
-use App\UseCase\Incomes\FilterInteractor;
+use App\UseCase\Incomes\Create_Incomes_Input;
+use App\UseCase\Incomes\Create_Incomes_Interactor;
+use App\UseCase\Incomes\Edit_Incomes_Input;
+use App\UseCase\Incomes\Edit_Incomes_Interactor;
+use App\UseCase\Incomes\Delete_Incomes_Interactor;
+use App\UseCase\Incomes\Filter_Incomes_Input;
+use App\UseCase\Incomes\Filter_Incomes_Interactor;
 
 
 class incomesController extends Controller
@@ -22,13 +22,13 @@ class incomesController extends Controller
     {
         $incomeSources = IncomeSource::where('user_id', Auth::id())->get();
 
-        $input = new FilterInput(
+        $input = new Filter_Incomes_Input(
             $request->input('income_source'),
             $request->input('start-date'),
             $request->input('end-date')
         );
 
-        $interactor = new FilterInteractor();
+        $interactor = new Filter_Incomes_Interactor();
         $incomes = $interactor->handle($input);
 
         return view('incomes.incomes', compact('incomes', 'incomeSources'));
@@ -55,14 +55,14 @@ class incomesController extends Controller
 
         $userId = Auth::id();
 
-        $input = new CreateInput(
+        $input = new Create_Incomes_Input(
             $validatedData['income_source'],
             $validatedData['amount'],
             $validatedData['date'],
             $userId
         );
 
-        $interactor = new CreateInteractor();
+        $interactor = new Create_Incomes_Interactor();
         $interactor->handle($input);
 
         return redirect()->route('incomes');
@@ -89,14 +89,14 @@ class incomesController extends Controller
             'date.required' => '日付が入力されていません',
         ]);
 
-        $input = new EditInput(
+        $input = new Edit_Incomes_Input(
             $id,
             $validatedData['income_source'],
             $validatedData['amount'],
             $validatedData['date'],
         );
 
-        $interactor = new EditInteractor();
+        $interactor = new Edit_Incomes_Interactor();
         $interactor->handle($input);
 
         return redirect()->route('incomes');
@@ -104,7 +104,7 @@ class incomesController extends Controller
 
     public function destroy($id)
     {
-        $interactor = new deleteInteractor;
+        $interactor = new delete_Incomes_Interactor;
         $interactor->handle($id);
 
         return redirect()->route('incomes');

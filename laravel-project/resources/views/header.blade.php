@@ -12,7 +12,10 @@
         <li><a href="{{ route('top') }}">HOME</a></li>
         <li><a href="{{ route('incomes') }}">収入TOP</a></li>
         <li><a href="{{ route('spendings.index') }}">支出TOP</a></li>
-        <li><a href="{{ route('logout') }}">ログアウト</a></li>
+        <form action="{{ route('logout') }}" method="post">
+          @csrf 
+          <button type="submit">ログアウト</button>
+        </form>
       </ul>
     </div>
   </header>
