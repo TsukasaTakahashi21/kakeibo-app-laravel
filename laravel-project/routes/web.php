@@ -16,11 +16,14 @@ Route::post('/confirm_info', [UserController::class, 'confirm_info'])->name('con
 
 // 確認画面
 Route::get('/signUp_confirm', [UserController::class, 'signUp_confirm'])->name('signUp_confirm');
-
 Route::post('/register', [UserController::class, 'register'])->name('register');
+
 // ログイン
 Route::get('/signIn', [UserController::class, 'signIn'])->name('signIn');
 Route::post('/login', [UserController::class, 'login'])->name('login');
+
+// ログアウト
+Route::get('/logout', [UserController::class, 'logout'])->name('logout');
 
 
 // Topページ

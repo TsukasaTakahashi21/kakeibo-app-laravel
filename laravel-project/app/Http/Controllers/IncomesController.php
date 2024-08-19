@@ -29,7 +29,7 @@ class incomesController extends Controller
         } elseif ($startDate) {
             $query->where('accrual_date', '>=', $startDate);
         } elseif($endDate) {
-            $query->where('accrual_date', '>=', $endDate);
+            $query->where('accrual_date', '<=', $endDate);
         }
 
         $incomes = $query->get();
