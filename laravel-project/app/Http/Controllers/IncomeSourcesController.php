@@ -5,11 +5,11 @@ use Illuminate\Http\Request;
 use App\Models\IncomeSource; 
 use Illuminate\Support\Facades\Auth;
 
-use App\UseCase\Income_Sources\CreateInput;
-use App\UseCase\Income_Sources\CreateInteractor;
-use App\UseCase\Income_Sources\deleteInteractor;
-use App\UseCase\Income_Sources\EditInput;
-use App\UseCase\Income_Sources\EditInteractor;
+use App\UseCase\Income_Sources\Create_Income_Sources_Input;
+use App\UseCase\Income_Sources\Create_Income_Sources_Interactor;
+use App\UseCase\Income_Sources\delete_Income_Sources_Interactor;
+use App\UseCase\Income_Sources\Edit_Income_Sources_Input;
+use App\UseCase\Income_Sources\Edit_Income_Sources_Interactor;
 
 class IncomeSourcesController extends Controller
 {
@@ -45,8 +45,8 @@ class IncomeSourcesController extends Controller
 
         $userId = Auth::id();
 
-        $input = new CreateInput($validatedData['income_source'], $userId);
-        $interactor = new CreateInteractor();
+        $input = new Create_Income_Sources_Input($validatedData['income_source'], $userId);
+        $interactor = new Create_Income_Sources_Interactor();
         $interactor->handle($input);
 
         return redirect()->route('income_sources');
@@ -62,8 +62,8 @@ class IncomeSourcesController extends Controller
             'income_source.required' => '収入源が入力されていません',
         ]);
 
-        $input = new EditInput($id, $validatedData['income_source']);
-        $interactor = new EditInteractor();
+        $input = new Edit_Income_Sources_Input($id, $validatedData['income_source']);
+        $interactor = new Edit_Income_Sources_Interactor();
         $interactor->handle($input);
 
         return redirect()->route('income_sources');
@@ -72,7 +72,7 @@ class IncomeSourcesController extends Controller
     // 収入源の削除
     public function destroy($id)
     {
-        $interactor = new deleteInteractor();
+        $interactor = new delete_Income_Sources_Interactor();
         $interactor->handle($id);
 
         return redirect()->route('income_sources');
