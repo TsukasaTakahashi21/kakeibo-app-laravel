@@ -22,10 +22,10 @@ class CategoriesController extends Controller
         return view('spendings.create_categories');
     }
 
-    public function store(Request $request)
+    public function store(Request $request, $id)
     {
         $validatedData = $request->validate([
-            'category_name' => 'required|string|max:50|unique:categories,name',
+            'category_name' => 'required|string|max:50|unique:categories,name' . $id,
         ], [
             'category_name.required' => 'カテゴリ名が入力されていません',
             'category_name.unique' => 'すでに登録済みのカテゴリです',
@@ -44,7 +44,7 @@ class CategoriesController extends Controller
 
     public function edit($id)
     {
-        $category = categories::FindOrFail($id);
+        $category = categories::where('id', $id)->where('user_id', Auth::id())->firstOrFail($id);
         return view('spendings.edit_categories', compact('category'));
     }
 
@@ -57,7 +57,7 @@ class CategoriesController extends Controller
             'category_name.unique' => 'すでに登録済みのカテゴリです',
         ]);
 
-        $category = Categories::findOrFail($id);
+        $category = Categories::where('id', $id)->where('user_id', Auth::id())->firstOrFail($id);
         $category->name = $validatedData['category_name'];
         $category->save();
 
@@ -67,7 +67,7 @@ class CategoriesController extends Controller
 
     public function destroy($id)
     {
-        $category = Categories::FindOrFail($id);
+        $category = Categories::where('id', $id)->where('user_id', Auth::id())->firstOrFail($id);
         $category->delete();
 
         return redirect()->route('index');
