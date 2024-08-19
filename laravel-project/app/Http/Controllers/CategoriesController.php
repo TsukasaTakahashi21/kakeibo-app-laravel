@@ -5,6 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Categories;
 use Illuminate\Support\Facades\Auth;
+use App\UseCase\Categories\Create_Categories_Input;
+use App\UseCase\Categories\Create_Categories_Interactor;
+use App\UseCase\Categories\Edit_Categories_Input;
+use App\UseCase\Categories\Edit_Categories_Interactor;
+use App\UseCase\Categories\Delete_Categories_Interactor;
 
 class CategoriesController extends Controller
 {
@@ -22,10 +27,10 @@ class CategoriesController extends Controller
         return view('spendings.create_categories');
     }
 
-    public function store(Request $request, $id)
+    public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'category_name' => 'required|string|max:50|unique:categories,name' . $id,
+            'category_name' => 'required|string|max:50|unique:categories,name',
         ], [
             'category_name.required' => 'カテゴリ名が入力されていません',
             'category_name.unique' => 'すでに登録済みのカテゴリです',
@@ -33,10 +38,9 @@ class CategoriesController extends Controller
 
         $userId = Auth::id();
 
-        $category = new Categories();
-        $category->name = $validatedData['category_name'];
-        $category->user_id = $userId;
-        $category->save();
+        $input = new Create_Categories_Input($validatedData['category_name'], $userId);
+        $interactor = new Create_Categories_Interactor();
+        $interactor->handle($input);
 
         return redirect()->route('index');
     }
@@ -44,7 +48,8 @@ class CategoriesController extends Controller
 
     public function edit($id)
     {
-        $category = categories::where('id', $id)->where('user_id', Auth::id())->firstOrFail($id);
+        $category = categories::where('id', $id)
+                                ->where('user_id', Auth::id())->firstOrFail();
         return view('spendings.edit_categories', compact('category'));
     }
 
@@ -57,9 +62,9 @@ class CategoriesController extends Controller
             'category_name.unique' => 'すでに登録済みのカテゴリです',
         ]);
 
-        $category = Categories::where('id', $id)->where('user_id', Auth::id())->firstOrFail($id);
-        $category->name = $validatedData['category_name'];
-        $category->save();
+        $input = new Edit_Categories_Input($validatedData['category_name'], $id);
+        $interactor = new Edit_Categories_Interactor();
+        $interactor->handle($input);
 
         return redirect()->route('index');
     }
@@ -67,9 +72,8 @@ class CategoriesController extends Controller
 
     public function destroy($id)
     {
-        $category = Categories::where('id', $id)->where('user_id', Auth::id())->firstOrFail($id);
-        $category->delete();
-
+        $interactor = new delete_Categories_Interactor();
+        $interactor->handle($id);
         return redirect()->route('index');
     }
 }

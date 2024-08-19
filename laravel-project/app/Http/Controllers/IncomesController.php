@@ -7,32 +7,29 @@ use App\Models\Incomes;
 use App\Models\IncomeSource;
 use Illuminate\Support\Facades\Auth;
 
+use App\UseCase\Incomes\Create_Incomes_Input;
+use App\UseCase\Incomes\Create_Incomes_Interactor;
+use App\UseCase\Incomes\Edit_Incomes_Input;
+use App\UseCase\Incomes\Edit_Incomes_Interactor;
+use App\UseCase\Incomes\Delete_Incomes_Interactor;
+use App\UseCase\Incomes\Filter_Incomes_Input;
+use App\UseCase\Incomes\Filter_Incomes_Interactor;
+
+
 class incomesController extends Controller
 {
     public function incomes(Request $request)
     {
         $incomeSources = IncomeSource::where('user_id', Auth::id())->get();
 
-        $query = Incomes::where('user_id', Auth::id());
+        $input = new Filter_Incomes_Input(
+            $request->input('income_source'),
+            $request->input('start-date'),
+            $request->input('end-date')
+        );
 
-        // 収入源による絞り込み
-        if ($request->filled('income_source')) {
-            $query->where('income_source_id', $request->input('income_source'));
-        }
-
-        // 日付による絞り込み
-        $startDate = $request->input('start-date');
-        $endDate = $request->input('end-date');
-
-        if ($startDate && $endDate)  {
-            $query->whereBetween('accrual_date', [$startDate, $endDate]);
-        } elseif ($startDate) {
-            $query->where('accrual_date', '>=', $startDate);
-        } elseif($endDate) {
-            $query->where('accrual_date', '<=', $endDate);
-        }
-
-        $incomes = $query->get();
+        $interactor = new Filter_Incomes_Interactor();
+        $incomes = $interactor->handle($input);
 
         return view('incomes.incomes', compact('incomes', 'incomeSources'));
     }
@@ -58,15 +55,19 @@ class incomesController extends Controller
 
         $userId = Auth::id();
 
-        $income = new Incomes();
-        $income->income_source_id = $validatedData['income_source'];
-        $income->amount = $validatedData['amount'];
-        $income->accrual_date = $validatedData['date'];
-        $income->user_id = $userId;
-        $income->save();
+        $input = new Create_Incomes_Input(
+            $validatedData['income_source'],
+            $validatedData['amount'],
+            $validatedData['date'],
+            $userId
+        );
+
+        $interactor = new Create_Incomes_Interactor();
+        $interactor->handle($input);
 
         return redirect()->route('incomes');
     }
+
 
     public function show_edit_incomes($id)
     {
@@ -74,6 +75,7 @@ class incomesController extends Controller
         $incomeSources = IncomeSource::where('user_id', Auth::id())->get();
         return view('incomes.edit_incomes', compact('income', 'incomeSources'));
     }
+
 
     public function update(Request $request, $id)
     {
@@ -87,50 +89,24 @@ class incomesController extends Controller
             'date.required' => '日付が入力されていません',
         ]);
 
-        $income = Incomes::findOrFail($id);
-        $income->income_source_id = $validatedData['income_source'];
-        $income->amount = $validatedData['amount'];
-        $income->accrual_date = $validatedData['date'];
-        $income->save();
+        $input = new Edit_Incomes_Input(
+            $id,
+            $validatedData['income_source'],
+            $validatedData['amount'],
+            $validatedData['date'],
+        );
+
+        $interactor = new Edit_Incomes_Interactor();
+        $interactor->handle($input);
 
         return redirect()->route('incomes');
     }
 
     public function destroy($id)
     {
-        $income = Incomes::FindOrFail($id);
-        $income->delete();
+        $interactor = new delete_Incomes_Interactor;
+        $interactor->handle($id);
 
         return redirect()->route('incomes');
-    }
-
-
-
-    public function create()
-    {
-        //
-    }
-
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 }
