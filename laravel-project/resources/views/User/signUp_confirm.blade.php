@@ -4,11 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ユーザー確認画面</title>
+  <link rel="stylesheet" href="{{ asset('css/Common.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/User.css') }}">
 </head>
 <body>
   <section class="user">
     <div class="user-container">
-      <p class="user-confirm-message">こちらの内容で登録してよろしいですか</p>
+    <div class="section-title">
+        <h1>登録内容の確認</h1>
+      </div>
       <!-- エラーメッセージ -->
       @if ($errors->any())
       <div class="error-message">
@@ -25,18 +29,18 @@
           @csrf
           <div class="user-input-form">
             <label for="name">ユーザー名:</label>
-            <input type="text" name="name" id="name" class="user-input" placeholder="UserName" value="{{ session('name') }}">
+            <input type="text" name="name" id="name" class="form-input" placeholder="UserName" value="{{ session('name') }}">
           </div>
           <div class="user-input-form">
-            <label for="email">メールアドレス</label>
-            <input type="email" name="email" id="email" class="user-input" placeholder="Email" value="{{ session('email') }}">
+            <label for="email">メールアドレス:</label>
+            <input type="email" name="email" id="email" class="form-input" placeholder="Email" value="{{ session('email') }}">
           </div>
           <div class="user-input-form">
-            <label for="password">パスワード</label>
-            <input type="password" name="password" id="password" class="user-input" placeholder="Password">
+            <label for="password">パスワード:</label>
+            <input type="password" name="password" id="password" class="form-input" placeholder="Password">
           </div>
           <div class="form-button">
-            <button type="submit" class="submit-button">送信</button>
+            <button type="submit" class="button">送信</button>
           </div>
           <div class="form-link">
             <a href="{{ route('signUp') }}" class="login-link">会員登録画面へ戻る</a>

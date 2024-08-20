@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>会員登録</title>
+  <link rel="stylesheet" href="{{ asset('css/Common.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/User.css') }}">
 </head>
 <body>
   <section class="user">
@@ -27,25 +29,25 @@
           @csrf
           <div class="user-input-form">
             <label for="name"></label>
-            <input type="text" name="name" id="name" class="user-input" placeholder="UserName" value="{{ old('name') }}">
+            <input type="text" name="name" id="name" class="form-input" placeholder="UserName" value="{{ old('name') }}">
           </div>
           <div class="user-input-form">
             <label for="email"></label>
-            <input type="email" name="email" id="email" class="user-input" placeholder="Email">
+            <input type="email" name="email" id="email" class="form-input" placeholder="Email">
           </div>
           <div class="user-input-form">
             <label for="password"></label>
-            <input type="password" name="password" id="password" class="user-input" placeholder="Password">
+            <input type="password" name="password" id="password" class="form-input" placeholder="Password">
           </div>
           <div class="user-input-form">
             <label for="password_confirmation"></label>
-            <input type="password" name="password_confirmation" id="password_confirmation" class="user-input" placeholder="Password確認">
+            <input type="password" name="password_confirmation" id="password_confirmation" class="form-input" placeholder="Password確認">
           </div>
           <div class="form-button">
-            <button type="submit" class="submit-button">アカウント作成</button>
+            <button type="submit" class="button">アカウント作成</button>
           </div>
           <div class="form-link">
-            <a href="{{ route('signIn') }}" class="login-link">ログイン画面へ</a>
+            <a href="{{ route('signIn') }}">ログイン画面へ</a>
           </div>
         </form>
       </div>
