@@ -39,9 +39,7 @@
             <label for="password">パスワード:</label>
             <input type="password" name="password" id="password" class="form-input" placeholder="Password">
           </div>
-          <div class="form-button">
-            <button type="submit" class="button">送信</button>
-          </div>
+          <button type="submit" class="form-button">送信</button>
           <div class="form-link">
             <a href="{{ route('signUp') }}" class="login-link">会員登録画面へ戻る</a>
           </div>

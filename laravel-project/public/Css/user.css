@@ -19,9 +19,14 @@
 
 .form-button {
   width: 100%;
+  padding: 10px;
   color: #ffffff;
   background-color: #007bff;
   border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 16px;
+  border: none; 
 }
 
 .form-button:hover {

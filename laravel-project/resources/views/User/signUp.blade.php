@@ -43,9 +43,7 @@
             <label for="password_confirmation"></label>
             <input type="password" name="password_confirmation" id="password_confirmation" class="form-input" placeholder="Password確認">
           </div>
-          <div class="form-button">
-            <button type="submit" class="button">アカウント作成</button>
-          </div>
+          <button type="submit" class="form-button">アカウント作成</button>
           <div class="form-link">
             <a href="{{ route('signIn') }}">ログイン画面へ</a>
           </div>

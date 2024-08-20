@@ -36,9 +36,7 @@
             <label for="password"></label>
             <input type="password" name="password" id="password" class="form-input" placeholder="Password">
           </div>
-          <div class="form-button">
-            <button type="submit" class="button">ログイン</button>
-          </div>
+          <button type="submit" class="form-button">ログイン</button>
           <div class="form-link">
             <a href="{{ route('signUp') }}">アカウントを作る</a>
           </div>
