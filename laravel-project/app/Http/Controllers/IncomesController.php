@@ -14,7 +14,8 @@ use App\UseCase\Incomes\Edit_Incomes_Interactor;
 use App\UseCase\Incomes\Delete_Incomes_Interactor;
 use App\UseCase\Incomes\Filter_Incomes_Input;
 use App\UseCase\Incomes\Filter_Incomes_Interactor;
-
+use App\ValueObject\Amount;
+use App\ValueObject\IncomeSourceName;
 
 class incomesController extends Controller
 {
@@ -56,8 +57,8 @@ class incomesController extends Controller
         $userId = Auth::id();
 
         $input = new Create_Incomes_Input(
-            $validatedData['income_source'],
-            $validatedData['amount'],
+            new IncomeSourceName($validatedData['income_source']),
+            new Amount($validatedData['amount']),
             $validatedData['date'],
             $userId
         );
@@ -91,8 +92,8 @@ class incomesController extends Controller
 
         $input = new Edit_Incomes_Input(
             $id,
-            $validatedData['income_source'],
-            $validatedData['amount'],
+            new IncomeSourceName($validatedData['income_source']),
+            new Amount($validatedData['amount']),
             $validatedData['date'],
         );
 

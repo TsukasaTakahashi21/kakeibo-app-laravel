@@ -10,6 +10,7 @@ use App\UseCase\Categories\Create_Categories_Interactor;
 use App\UseCase\Categories\Edit_Categories_Input;
 use App\UseCase\Categories\Edit_Categories_Interactor;
 use App\UseCase\Categories\Delete_Categories_Interactor;
+use App\ValueObject\categoryName;
 
 class CategoriesController extends Controller
 {
@@ -37,8 +38,10 @@ class CategoriesController extends Controller
         ]);
 
         $userId = Auth::id();
+        $categoryName = new CategoryName($validatedData['category_name']);
 
-        $input = new Create_Categories_Input($validatedData['category_name'], $userId);
+        $input = new Create_Categories_Input($categoryName, $userId);
+        
         $interactor = new Create_Categories_Interactor();
         $interactor->handle($input);
 
@@ -62,7 +65,9 @@ class CategoriesController extends Controller
             'category_name.unique' => 'すでに登録済みのカテゴリです',
         ]);
 
-        $input = new Edit_Categories_Input($validatedData['category_name'], $id);
+        $categoryName = new CategoryName($validatedData['category_name']);
+        $input = new Edit_Categories_Input($categoryName, $id);
+
         $interactor = new Edit_Categories_Interactor();
         $interactor->handle($input);
 

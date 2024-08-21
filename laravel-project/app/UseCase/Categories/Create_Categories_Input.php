@@ -1,19 +1,21 @@
 <?php
 namespace App\UseCase\Categories;
 
+use App\ValueObject\CategoryName;
+
 class Create_Categories_Input
 {
   private int $userId;
-  private string $categoryName;
+  private CategoryName $categoryName;
   
 
-  public function __construct(string $categoryName, int $userId)
+  public function __construct(CategoryName $categoryName, int $userId)
   {
     $this->categoryName = $categoryName;
     $this->userId = $userId;
   }
 
-  public function getCategoryName(): string
+  public function getCategoryName(): CategoryName
   {
     return $this->categoryName;
   }

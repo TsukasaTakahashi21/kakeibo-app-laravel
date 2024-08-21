@@ -10,6 +10,8 @@ use App\UseCase\Income_Sources\Create_Income_Sources_Interactor;
 use App\UseCase\Income_Sources\delete_Income_Sources_Interactor;
 use App\UseCase\Income_Sources\Edit_Income_Sources_Input;
 use App\UseCase\Income_Sources\Edit_Income_Sources_Interactor;
+use App\ValueObject\Amount;
+use App\ValueObject\IncomeSourceName;
 
 class IncomeSourcesController extends Controller
 {
@@ -45,7 +47,9 @@ class IncomeSourcesController extends Controller
 
         $userId = Auth::id();
 
-        $input = new Create_Income_Sources_Input($validatedData['income_source'], $userId);
+        $incomeSourceName = new IncomeSourceName($validatedData['income_source']);
+        $input = new Create_Income_Sources_Input($incomeSourceName, $userId);
+
         $interactor = new Create_Income_Sources_Interactor();
         $interactor->handle($input);
 
@@ -62,7 +66,8 @@ class IncomeSourcesController extends Controller
             'income_source.required' => '収入源が入力されていません',
         ]);
 
-        $input = new Edit_Income_Sources_Input($id, $validatedData['income_source']);
+        $incomeSourceName = new IncomeSourceName($validatedData['income_source']);
+        $input = new Edit_Income_Sources_Input($id, $incomeSourceName);
         $interactor = new Edit_Income_Sources_Interactor();
         $interactor->handle($input);
 
