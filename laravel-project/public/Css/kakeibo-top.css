@@ -1,0 +1,77 @@
+
+/* 家計簿トップセクションのスタイル */
+.kakeibo-top {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #ffffff; /
+}
+
+/* 年の検索フォームのスタイル */
+.year-search {
+  margin-bottom: 20px;
+}
+
+.year-select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+.submit-button {
+  padding: 10px;
+  color: #ffffff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.submit-button:hover {
+  background-color: #0056b3;
+}
+
+/* 結果テーブルのスタイル */
+.result-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.kakeibo-table {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.table-header {
+  background-color: #f2f2f2; /* 落ち着いた色に変更 */
+  color: #333;
+  text-align: left;
+}
+
+.table-header th {
+  padding: 10px;
+}
+
+.table-row {
+  background-color: #ffffff; /* 背景色を白に統一 */
+}
+
+.table-row:nth-child(even) {
+  background-color: #f9f9f9; /* 落ち着いた色に変更 */
+}
+
+.table-cell {
+  padding: 10px;
+  text-align: right;
+  border-top: 1px solid #ddd;
+}
+
+.table-cell:first-child {
+  text-align: left;
+}
