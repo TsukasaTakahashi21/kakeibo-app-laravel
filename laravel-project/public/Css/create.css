@@ -1,0 +1,62 @@
+
+/* フォームコンテナのスタイル */
+.form-container {
+  width: 90%;
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+
+}
+
+/* フォームグループのスタイル */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.form-group .form-input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box; /* ボックスサイズを調整してパディングとボーダーを含める */
+}
+
+.form-group .form-input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* フォームリンクのスタイル */
+.form-link {
+  display: inline-block;
+  margin-top: 10px;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.form-link:hover {
+  text-decoration: underline;
+}
+
+/* 登録ボタンのスタイル */
+.form-button {
+  padding: 10px 20px;
+  color: #ffffff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.form-button:hover {
+  background-color: #0056b3;
+}

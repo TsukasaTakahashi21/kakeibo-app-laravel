@@ -4,10 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>支出登録</title>
+  <link rel="stylesheet" href="{{ asset('css/common.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/create.css') }}">
 </head>
 <body>
   @include('header')
-  <section class="create-spendings">
+  <section class="form-container">
     <div class="section-title">
       <h1>支出登録</h1>
     </div>
@@ -24,24 +26,32 @@
 
     <form action="{{ route('spendings.store') }}" method="post">
       @csrf
-      <label for="spending_name">支出名 :</label>
-      <input type="text" name="spending_name" id="spending_name" class="input-form" placeholder="支出名">
-      <label for="category_name">カテゴリー :</label>
-      <select name="category_name" id="category_name">
-        <option value="">選択してください</option>
-          @foreach($categories as $category)
-            <option value="{{ $category->id }}">{{ $category->name }}</option>
-          @endforeach
-      </select>
-      <a href="{{ route('index') }}">カテゴリー一覧へ</a>
-      <label for="amount">金額 :</label>
-      <input type="text" name="amount" id="amount" class="input-form" placeholder="金額">円
+      <div class="form-group">
+        <label for="spending_name">支出名 :</label>
+        <input type="text" name="spending_name" id="spending_name" class="form-input" placeholder="支出名">
+      </div>
+      <div class="form-group">
+        <label for="category_name">カテゴリー :</label>
+        <select name="category_name" id="category_name" class="form-input">
+          <option value="">選択してください</option>
+            @foreach($categories as $category)
+              <option value="{{ $category->id }}">{{ $category->name }}</option>
+            @endforeach
+        </select>
+        <a href="{{ route('index') }}" class="form-link">カテゴリー一覧へ</a>
+      </div>
+      
+      <div class="form-group">
+        <label for="amount">金額 :</label>
+        <input type="text" name="amount" id="amount" class="form-input" placeholder="金額">
+      </div>
+      
+      <div class="form-group">
+        <label for="date">日付 :</label>
+        <input type="date" name="date" id="date" class="form-input">
+      </div>
 
-      <label for="date">日付 :</label>
-      <input type="date" name="date" id="date" class="input-form">
-
-      <button type="submit" class="button">登録</button>
-      <a href="{{ route('spendings.index') }}">戻る</a>
+      <button type="submit" class="form-button">登録</button>
     </form>
   </section>
 </body>

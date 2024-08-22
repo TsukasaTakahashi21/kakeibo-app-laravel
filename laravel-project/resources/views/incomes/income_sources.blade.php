@@ -4,10 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>収入源一覧</title>
+  <link rel="stylesheet" href="{{ asset('css/common.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/common-financial.css') }}">
 </head>
 <body>
   @include('header')
-  <section class="incomeSources-top">
+  <section class="financial-top">
     <div class="section-title">
       <h1>収入源一覧</h1>
     </div>
@@ -28,19 +30,20 @@
           @foreach($incomeSources as $incomeSource)
             <tr class="table-row">
               <td class="table-cell">{{ $incomeSource->name }}</td>
-              <td class="table-cell"><a href="{{ route('show_edit_income_sources', $incomeSource->id) }}">編集</a></td>
+              <td class="table-cell">
+                <a href="{{ route('show_edit_income_sources', $incomeSource->id) }}" class="edit-link">編集</a>
+              </td>
               <td class="table-cell">
                 <form action="{{ route('income_sources.destroy', $incomeSource->id) }}" method="post">
                   @csrf
                   @method('DELETE')
-                  <button type="submit" class="button">削除</button>
+                  <button type="submit" class="delete-link">削除</button>
                 </form>
               </td>
             </tr>
           @endforeach
         </tbody>
       </table>
-      <a href="">戻る</a>
     </div>
   </section>
 </body>
