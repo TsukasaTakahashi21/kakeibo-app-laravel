@@ -1,13 +1,13 @@
 <?php
+
 namespace App\UseCase\Categories;
 
-use App\UseCase\Categories\Create_Categories_Input;
-use App\Models\categories;
-use App\ValueObject\CategoryName;
+use App\UseCase\Categories\CreateCategoryInput;
+use App\Models\Categories;
 
-class Create_Categories_Interactor
+class CreateCategoryInteractor
 {
-  public function handle(Create_Categories_Input $input)
+  public function handle(CreateCategoryInput $input)
   {
     $category = new Categories();
     $category->name = $input->getCategoryName()->getValue();
