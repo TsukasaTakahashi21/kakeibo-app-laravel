@@ -1,17 +1,18 @@
 <?php
+
 namespace App\UseCase\Incomes;
 
 use App\Models\Incomes;
 use Illuminate\Support\Facades\Auth;
 
-class Delete_incomes_Interactor
+class DeleteIncomesInteractor
 {
-  public function handle(int $id)
+  public function handle(int $id): void
   {
     $income = Incomes::where('id', $id)
-                    ->where('user_id', Auth::id())
-                    ->firstOrFail();
-    
+      ->where('user_id', Auth::id())
+      ->firstOrFail();
+
     $income->delete();
   }
 }

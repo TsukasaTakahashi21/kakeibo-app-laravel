@@ -1,7 +1,7 @@
 <?php
 namespace App\UseCase\Incomes;
 
-class Filter_incomes_Input
+class FilterIncomesInput
 {
   private ?int $incomeSourceId;
   private ?string $startDate;

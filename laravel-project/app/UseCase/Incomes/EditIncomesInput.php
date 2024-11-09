@@ -1,9 +1,10 @@
 <?php
+
 namespace App\UseCase\Incomes;
 
 use App\ValueObject\Amount;
 
-class Edit_incomes_Input
+class EditIncomesInput
 {
   private int $id;
   private string $incomeSourceId;
@@ -20,7 +21,7 @@ class Edit_incomes_Input
 
   public function getId(): int
   {
-      return $this->id;
+    return $this->id;
   }
 
   public function getIncomeSourceId(): string
@@ -37,5 +38,4 @@ class Edit_incomes_Input
   {
     return $this->date;
   }
-
 }
