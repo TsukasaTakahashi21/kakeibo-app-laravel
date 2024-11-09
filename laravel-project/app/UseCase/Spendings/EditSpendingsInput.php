@@ -1,10 +1,11 @@
 <?php
+
 namespace App\UseCase\Spendings;
 
 use App\ValueObject\Amount;
 use App\ValueObject\SpendingName;
 
-class Edit_Spendings_Input
+class EditSpendingsInput
 {
   private int $spendingId;
   private SpendingName $spendingName;
@@ -24,32 +25,32 @@ class Edit_Spendings_Input
   }
 
   public function getSpendingName(): SpendingName
-    {
-      return $this->spendingName;
-    }
+  {
+    return $this->spendingName;
+  }
 
-    public function getCategoryId(): int
-    {
-      return $this->categoryId;
-    }
+  public function getCategoryId(): int
+  {
+    return $this->categoryId;
+  }
 
-    public function getAmount(): Amount
-    {
-      return $this->amount;
-    }
-    
-    public function getDate(): string
-    {
-      return $this->date;
-    }
+  public function getAmount(): Amount
+  {
+    return $this->amount;
+  }
 
-    public function getUserId(): int
-    {
-      return $this->userId;
-    }
+  public function getDate(): string
+  {
+    return $this->date;
+  }
 
-    public function getSpendingId(): int
-    {
-      return $this->spendingId;
-    }
+  public function getUserId(): int
+  {
+    return $this->userId;
+  }
+
+  public function getSpendingId(): int
+  {
+    return $this->spendingId;
+  }
 }

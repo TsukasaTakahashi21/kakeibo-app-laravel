@@ -1,14 +1,14 @@
 <?php
+
 namespace App\UseCase\Spendings;
 
-use App\UseCase\Spendings\Filter_Spendings_Input;
+use App\UseCase\Spendings\FilterSpendingsInput;
 use App\Models\spendings;
-use App\Models\categories;
 use Illuminate\Support\Facades\Auth;
 
-class Filter_Spendings_Interactor
+class FilterSpendingsInteractor
 {
-  public function handle(Filter_Spendings_Input $input)
+  public function handle(FilterSpendingsInput $input)
   {
     $query = Spendings::where('user_id', Auth::id());
 
@@ -25,6 +25,5 @@ class Filter_Spendings_Interactor
     }
 
     return $query->get();
-
   }
 }

@@ -1,7 +1,8 @@
 <?php
+
 namespace App\UseCase\Spendings;
 
-class Filter_Spendings_Input
+class FilterSpendingsInput
 {
   private ?int $categoryId;
   private ?string $startDate;
@@ -19,7 +20,7 @@ class Filter_Spendings_Input
     return $this->categoryId;
   }
 
-  public function getStartDate(): ?string 
+  public function getStartDate(): ?string
   {
     return $this->startDate;
   }
