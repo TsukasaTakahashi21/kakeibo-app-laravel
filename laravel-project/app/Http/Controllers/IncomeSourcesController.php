@@ -1,23 +1,33 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\IncomeSource; 
+use App\Http\Requests\IncomeSourceRequest;
+use App\Models\IncomeSource;
 use Illuminate\Support\Facades\Auth;
 
-use App\UseCase\Income_Sources\Create_Income_Sources_Input;
-use App\UseCase\Income_Sources\Create_Income_Sources_Interactor;
-use App\UseCase\Income_Sources\delete_Income_Sources_Interactor;
-use App\UseCase\Income_Sources\Edit_Income_Sources_Input;
-use App\UseCase\Income_Sources\Edit_Income_Sources_Interactor;
-use App\ValueObject\Amount;
+use App\UseCase\IncomeSources\CreateIncomeSourcesInput;
+use App\UseCase\IncomeSources\CreateIncomeSourcesInteractor;
+use App\UseCase\IncomeSources\deleteIncomeSourcesInteractor;
+use App\UseCase\IncomeSources\EditIncomeSourcesInput;
+use App\UseCase\IncomeSources\EditIncomeSourcesInteractor;
 use App\ValueObject\IncomeSourceName;
 
 class IncomeSourcesController extends Controller
 {
+    private $createIncomeSourcesInteractor;
+    private $editIncomeSourcesInteractor;
+    private $deleteIncomeSourcesInteractor;
+
+    public function __construct(CreateIncomeSourcesInteractor $createIncomeSourcesInteractor, EditIncomeSourcesInteractor $editIncomeSourcesInteractor, DeleteIncomeSourcesInteractor $deleteIncomeSourcesInteractor)
+    {
+        $this->createIncomeSourcesInteractor = $createIncomeSourcesInteractor;
+        $this->editIncomeSourcesInteractor = $editIncomeSourcesInteractor;
+        $this->deleteIncomeSourcesInteractor = $deleteIncomeSourcesInteractor;
+    }
+
     public function income_sources()
     {
-        // ログインユーザーに関連する収入源を取得
         $incomeSources = IncomeSource::where('user_id', Auth::id())->get();
 
         return view('incomes.income_sources', compact('incomeSources'));
@@ -28,57 +38,40 @@ class IncomeSourcesController extends Controller
         return view('incomes.create_income_sources');
     }
 
-    public function show_edit_income_sources($id)
+    public function show_edit_income_sources(int $id)
     {
         $incomeSource = IncomeSource::findOrFail($id);
         return view('incomes.edit_income_sources', compact('incomeSource'));
     }
 
-
-
     // 収入源の追加
-    public function store(Request $request)
+    public function store(IncomeSourceRequest $request)
     {
-        $validatedData = $request->validate([
-            'income_source' => 'required|string|max:50',
-        ], [
-            'income_source.required' => '収入源が入力されていません',
-        ]);
-
         $userId = Auth::id();
 
-        $incomeSourceName = new IncomeSourceName($validatedData['income_source']);
-        $input = new Create_Income_Sources_Input($incomeSourceName, $userId);
+        $incomeSourceName = new IncomeSourceName($request->income_source);
+        $input = new CreateIncomeSourcesInput($incomeSourceName, $userId);
 
-        $interactor = new Create_Income_Sources_Interactor();
-        $interactor->handle($input);
+        $this->createIncomeSourcesInteractor->handle($input);
 
         return redirect()->route('income_sources');
     }
 
-
     // 収入源の編集
-    public function update(Request $request, $id)
+    public function update(IncomeSourceRequest $request, int $id)
     {
-        $validatedData = $request->validate([
-            'income_source' => 'required|string|max:50',
-        ], [
-            'income_source.required' => '収入源が入力されていません',
-        ]);
+        $incomeSourceName = new IncomeSourceName($request->income_source);
+        $input = new EditIncomeSourcesInput($id, $incomeSourceName);
 
-        $incomeSourceName = new IncomeSourceName($validatedData['income_source']);
-        $input = new Edit_Income_Sources_Input($id, $incomeSourceName);
-        $interactor = new Edit_Income_Sources_Interactor();
-        $interactor->handle($input);
+        $this->editIncomeSourcesInteractor->handle($input);
 
         return redirect()->route('income_sources');
     }
 
     // 収入源の削除
-    public function destroy($id)
+    public function destroy(int $id)
     {
-        $interactor = new delete_Income_Sources_Interactor();
-        $interactor->handle($id);
+        $this->deleteIncomeSourcesInteractor->handle($id);
 
         return redirect()->route('income_sources');
     }

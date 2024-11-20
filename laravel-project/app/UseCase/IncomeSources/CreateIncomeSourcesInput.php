@@ -1,9 +1,9 @@
 <?php
-namespace App\UseCase\Income_Sources;
+namespace App\UseCase\IncomeSources;
 
 use App\ValueObject\IncomeSourceName;
 
-class Create_Income_Sources_Input
+class CreateIncomeSourcesInput
 {
   private IncomeSourceName $incomeSource;
   private int $userId;

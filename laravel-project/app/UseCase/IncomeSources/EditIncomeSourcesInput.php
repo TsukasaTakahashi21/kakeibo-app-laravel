@@ -1,9 +1,9 @@
 <?php
-namespace App\UseCase\Income_Sources;
+namespace App\UseCase\IncomeSources;
 
 use App\ValueObject\IncomeSourceName;
 
-class Edit_Income_Sources_Input
+class EditIncomeSourcesInput
 {
   private IncomeSourceName $incomeSource;
   private int $id;
