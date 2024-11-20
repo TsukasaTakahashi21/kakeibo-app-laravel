@@ -1,9 +1,10 @@
 <?php
+
 namespace App\ValueObject;
 
 use InvalidArgumentException;
 
-class categoryName
+class CategoryName
 {
   private $value;
 
@@ -13,7 +14,7 @@ class categoryName
     $this->value = $value;
   }
 
-  public function validateCategoryName(string $value)
+  public function validateCategoryName(string $value): void
   {
     if (empty($value)) {
       throw new InvalidArgumentException('カテゴリー名を入力してください');
@@ -30,7 +31,7 @@ class categoryName
   }
 
   public function __toString(): string
-    {
-        return $this->value;
-    }
+  {
+    return $this->value;
+  }
 }
