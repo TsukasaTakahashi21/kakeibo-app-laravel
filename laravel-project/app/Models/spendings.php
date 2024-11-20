@@ -9,6 +9,14 @@ class spendings extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'category_id', 
+        'amount',
+        'accrual_date',
+        'user_id',
+    ];
+
     public function category()
     {
         return $this->belongsTo(Categories::class);

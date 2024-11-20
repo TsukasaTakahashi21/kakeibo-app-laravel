@@ -4,7 +4,7 @@ namespace App\UseCase\Spendings;
 use App\ValueObject\Amount;
 use App\ValueObject\SpendingName;
 
-class Create_Spendings_Input
+class CreateSpendingsInput
 {
   private SpendingName $spendingName;
   private int $categoryId;
