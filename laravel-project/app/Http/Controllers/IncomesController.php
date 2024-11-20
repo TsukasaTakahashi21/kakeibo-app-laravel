@@ -3,34 +3,46 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\IncomeRequest;
 use App\Models\Incomes;
 use App\Models\IncomeSource;
 use Illuminate\Support\Facades\Auth;
-
-use App\UseCase\Incomes\Create_Incomes_Input;
-use App\UseCase\Incomes\Create_Incomes_Interactor;
-use App\UseCase\Incomes\Edit_Incomes_Input;
-use App\UseCase\Incomes\Edit_Incomes_Interactor;
-use App\UseCase\Incomes\Delete_Incomes_Interactor;
-use App\UseCase\Incomes\Filter_Incomes_Input;
-use App\UseCase\Incomes\Filter_Incomes_Interactor;
+use App\UseCase\Incomes\CreateIncomesInput;
+use App\UseCase\Incomes\CreateIncomesInteractor;
+use App\UseCase\Incomes\EditIncomesInput;
+use App\UseCase\Incomes\EditIncomesInteractor;
+use App\UseCase\Incomes\DeleteIncomesInteractor;
+use App\UseCase\Incomes\FilterIncomesInput;
+use App\UseCase\Incomes\FilterIncomesInteractor;
 use App\ValueObject\Amount;
 use App\ValueObject\IncomeSourceName;
 
 class incomesController extends Controller
 {
+    private $createIncomesInteractor;
+    private $editIncomesInteractor;
+    private $deleteIncomesInteractor;
+    private $filterIncomesInteractor;
+
+    public function __construct(CreateIncomesInteractor $createIncomesInteractor, EditIncomesInteractor $editIncomesInteractor, DeleteIncomesInteractor $deleteIncomesInteractor, FilterIncomesInteractor $filterIncomesInteractor)
+    {
+        $this->createIncomesInteractor = $createIncomesInteractor;
+        $this->editIncomesInteractor = $editIncomesInteractor;
+        $this->deleteIncomesInteractor = $deleteIncomesInteractor;
+        $this->filterIncomesInteractor = $filterIncomesInteractor;
+    }
+
     public function incomes(Request $request)
     {
         $incomeSources = IncomeSource::where('user_id', Auth::id())->get();
 
-        $input = new Filter_Incomes_Input(
+        $input = new FilterIncomesInput(
             $request->input('income_source'),
             $request->input('start-date'),
             $request->input('end-date')
         );
 
-        $interactor = new Filter_Incomes_Interactor();
-        $incomes = $interactor->handle($input);
+        $incomes = $this->filterIncomesInteractor->handle($input);
 
         return view('incomes.incomes', compact('incomes', 'incomeSources'));
     }
@@ -41,72 +53,46 @@ class incomesController extends Controller
         return view('incomes.create_incomes', compact('incomeSources'));
     }
 
-    public function store(Request $request)
+    public function store(IncomeRequest $request)
     {
-        $validatedData = $request->validate([
-            'income_source' => 'required|exists:income_sources,id',
-            'amount' => 'required|integer',
-            'date' => 'required|date',
-        ], [
-            'income_source.required' => '収入源が選択されていません',
-            'income_source.exists' => '選択された収入源が存在しません',
-            'amount.required' => '金額が入力されていません',
-            'date.required' => '日付が入力されていません',
-        ]);
-
         $userId = Auth::id();
 
-        $input = new Create_Incomes_Input(
-            new IncomeSourceName($validatedData['income_source']),
-            new Amount($validatedData['amount']),
-            $validatedData['date'],
+        $input = new CreateIncomesInput(
+            new IncomeSourceName($request->income_source),
+            new Amount($request->amount),
+            $request->date,
             $userId
         );
 
-        $interactor = new Create_Incomes_Interactor();
-        $interactor->handle($input);
+        $this->createIncomesInteractor->handle($input);
 
         return redirect()->route('incomes');
     }
 
-
-    public function show_edit_incomes($id)
+    public function show_edit_incomes(int $id)
     {
         $income = Incomes::findOrFail($id);
         $incomeSources = IncomeSource::where('user_id', Auth::id())->get();
         return view('incomes.edit_incomes', compact('income', 'incomeSources'));
     }
 
-
-    public function update(Request $request, $id)
+    public function update(IncomeRequest $request, int $id)
     {
-        $validatedData = $request->validate([
-            'income_source' => 'required|exists:income_sources,id',
-            'amount' => 'required|integer',
-            'date' => 'required|date',
-        ], [
-            'income_source.required' => '収入源が入力されていません',
-            'amount.required' => '金額が入力されていません',
-            'date.required' => '日付が入力されていません',
-        ]);
-
-        $input = new Edit_Incomes_Input(
+        $input = new EditIncomesInput(
             $id,
-            new IncomeSourceName($validatedData['income_source']),
-            new Amount($validatedData['amount']),
-            $validatedData['date'],
+            new IncomeSourceName($request->income_source),
+            new Amount($request->amount),
+            $request->date,
         );
 
-        $interactor = new Edit_Incomes_Interactor();
-        $interactor->handle($input);
+        $this->editIncomesInteractor->handle($input);
 
         return redirect()->route('incomes');
     }
 
-    public function destroy($id)
+    public function destroy(int $id)
     {
-        $interactor = new delete_Incomes_Interactor;
-        $interactor->handle($id);
+        $this->deleteIncomesInteractor->handle($id);
 
         return redirect()->route('incomes');
     }

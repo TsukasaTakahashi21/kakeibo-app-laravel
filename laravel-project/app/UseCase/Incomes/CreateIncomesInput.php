@@ -1,9 +1,10 @@
 <?php
+
 namespace App\UseCase\Incomes;
 
 use App\ValueObject\Amount;
 
-class Create_incomes_Input
+class CreateIncomesInput
 {
   private string $incomeSourceId;
   private Amount $amount;
@@ -34,7 +35,7 @@ class Create_incomes_Input
   }
 
   public function getUserId(): int
-    {
-        return $this->userId;
-    }
+  {
+    return $this->userId;
+  }
 }
