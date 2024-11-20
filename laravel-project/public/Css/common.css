@@ -1,0 +1,40 @@
+/* 全体のスタイル設定 */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+/* セクションタイトルのスタイル */
+.section-title {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.section-title h1 {
+  margin: 0;
+  font-size: 28px;
+  color: #333;
+}
+
+/* エラーメッセージのスタイル */
+.error-message {
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #f8d7da; /* エラー背景色 */
+  color: #721c24; /* エラー文字色 */
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+}
+
+.error-message ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.error-message li {
+  margin: 0;
+  padding: 5px 0;
+}
+
+

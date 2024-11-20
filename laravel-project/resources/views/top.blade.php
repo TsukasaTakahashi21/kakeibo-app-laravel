@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>家計簿アプリ</title>
+  <link rel="stylesheet" href="{{ asset('css/common.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/kakeibo-top.css') }}">
 </head>
 <body>
   @include('header')
@@ -20,8 +22,8 @@
             </option>
           @endforeach
         </select>
-        <label for="year">年を選択</label>
-        <button type="submit" class="button">検索</button>
+        <label for="year">年の収支一覧</label>
+        <button type="submit" class="submit-button">検索</button>
       </form>
     </div>
 

@@ -4,10 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>カテゴリー編集</title>
+  <link rel="stylesheet" href="{{ asset('css/common.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/edit.css') }}">
 </head>
 <body>
   @include('header')
-  <section class="edit-categories">
+  <section class="form-container">
     <div class="section-title">
       <h1>編集</h1>
     </div>

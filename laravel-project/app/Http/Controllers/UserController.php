@@ -69,7 +69,7 @@ class UserController extends Controller
             $input = new SignUpInput(
                 session('name'),
                 session('email'),
-                $request->input('password'),
+                session('password'),
             );
     
             $interactor = new SignUpInteractor();

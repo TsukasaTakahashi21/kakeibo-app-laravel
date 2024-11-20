@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ログイン</title>
+  <link rel="stylesheet" href="{{ asset('css/common.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/user.css') }}">
 </head>
 <body>
   <section class="user">
@@ -28,17 +30,15 @@
           @csrf
           <div class="user-input-form">
             <label for="email"></label>
-            <input type="email" name="email" id="email" class="user-input" placeholder="Email" >
+            <input type="email" name="email" id="email" class="form-input" placeholder="Email" >
           </div>
           <div class="user-input-form">
             <label for="password"></label>
-            <input type="password" name="password" id="password" class="user-input" placeholder="Password">
+            <input type="password" name="password" id="password" class="form-input" placeholder="Password">
           </div>
-          <div class="form-button">
-            <button type="submit" class="submit-button">ログイン</button>
-          </div>
+          <button type="submit" class="form-button">ログイン</button>
           <div class="form-link">
-            <a href="{{ route('signUp') }}" class="login-link">アカウントを作る</a>
+            <a href="{{ route('signUp') }}">アカウントを作る</a>
           </div>
         </form>
       </div>
