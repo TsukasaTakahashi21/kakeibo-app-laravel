@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>収入源追加</title>
+  <title>カテゴリー追加</title>
   <link rel="stylesheet" href="{{ asset('css/common.css') }}">
   <link rel="stylesheet" href="{{ asset('css/create.css') }}">
 </head>
@@ -11,7 +11,7 @@
   @include('header')
   <section class="form-container">
     <div class="section-title">
-      <h1>収入源追加</h1>
+      <h1>支出源追加</h1>
     </div>
     <!-- エラーメッセージ -->
     @if ($errors->any())
@@ -24,11 +24,11 @@
       </div>
     @endif
 
-    <form action="{{ route('income_sources.store') }}" method="post">
+    <form action="{{ route('categories.store') }}" method="post">
       @csrf
       <div class="form-group">
-        <label for="income_source">収入源 :</label>
-        <input type="text" name="income_source" id="income_source" class="form-input" placeholder="収入源を入力">
+        <label for="category_name">支出源 :</label>
+        <input type="text" name="category_name" id="category_name" class="form-input" placeholder="支出源を入力">
       </div>
       <button type="submit" class="form-button">登録</button>
     </form>

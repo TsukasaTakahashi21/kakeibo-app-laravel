@@ -14,7 +14,7 @@
       <h1>カテゴリ一覧</h1>
     </div>
     <div class="link">
-      <a href="{{ route('create') }}">カテゴリを追加する</a>
+      <a href="{{ route('categories.create') }}">カテゴリを追加する</a>
     </div>
 
     <div class="result-table">
