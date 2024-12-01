@@ -1,26 +1,15 @@
 <?php
 namespace App\UseCase\User;
 
-use App\UseCase\user\signInInput;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
-
-class signInInteractor
+class SignInInteractor
 {
   public function handle(signInInput $input)
   {
-    $loginData = [
+    return Auth::attempt([
       'email' => $input->getEmail(),
       'password' => $input->getPassword(),
-    ];
-
-    if (!Auth::attempt($loginData)) {
-      return false;
-    }
-
-    return true;
-
+    ]);
   }
 }

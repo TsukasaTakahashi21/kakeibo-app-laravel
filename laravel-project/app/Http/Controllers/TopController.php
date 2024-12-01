@@ -3,39 +3,30 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Spendings;
-use App\Models\Incomes;
 use Illuminate\Support\Facades\Auth;
+use App\UseCase\Top\GetMonthlyData_Input;
+use App\UseCase\Top\GetMonthlyData_Interactor;
 
 class TopController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
-    public function top(Request $request)
+    public function top(Request $request, GetMonthlyData_Interactor $interactor)
     {
         $currentYear = now()->year;
         $years = range($currentYear - 5, $currentYear + 5);
         $selectedYear = $request->input('year', $currentYear);
-
         $userId = Auth::id();
 
-        $monthlyData = [];
-        for ($month = 1; $month <= 12; $month++) {
-            $income = Incomes::whereYear('accrual_date', $selectedYear)
-                            ->whereMonth('accrual_date', $month)
-                            ->where('user_id', Auth::id())
-                            ->sum('amount');
-                            
-            $spending = Spendings::whereYear('accrual_date', $selectedYear)
-                                ->whereMonth('accrual_date', $month)
-                                ->where('user_id', Auth::id())
-                                ->sum('amount');
-
-            $monthlyData[$month] = [
-                'income' => $income,
-                'spending' => $spending,
-                'balance' => $income - $spending,
-            ];
+        if (is_null($userId)) {
+            return redirect()->route('login')->withErrors('セッションがタイムアウトしました。再度ログインしてください。');
         }
+
+        $input = new GetMonthlyData_Input($selectedYear, $userId);
+        $monthlyData = $interactor->handle($input);
 
         return view('top', compact('years', 'selectedYear', 'monthlyData'));
     }  

@@ -62,7 +62,7 @@ Route::delete('/incomes/{id}', [IncomesController::class, 'destroy'])->name('inc
 Route::get('/categories', [CategoriesController::class, 'index'])->name('index');
 
 // カテゴリーの追加
-Route::get('/create_categories', [CategoriesController::class, 'create'])->name('create');
+Route::get('/create_categories', [CategoriesController::class, 'create'])->name('categories.create');
 Route::post('/categories', [CategoriesController::class, 'store'])->name('categories.store');
 
 // カテゴリーの編集

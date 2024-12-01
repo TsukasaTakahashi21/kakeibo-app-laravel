@@ -1,0 +1,56 @@
+/* ヘッダー全体のスタイル */
+.header {
+  width: 100%;
+  background-color: #007bff; /* ヘッダーの背景色 */
+  color: #ffffff; /* テキスト色 */
+  padding: 10px 0; /* 上下の余白 */
+}
+
+.inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.nav {
+  display: flex;
+  justify-content: center; /* ナビゲーションリストを中央に配置 */
+}
+
+.nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 15px; /* リンク間のスペース */
+}
+
+.nav-list li {
+  margin: 0;
+}
+
+.nav-list a {
+  text-decoration: none;
+  color: #ffffff; /* リンクのテキスト色 */
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 15px; /* リンクの上下左右の余白 */
+  border-radius: 4px;
+  display: inline-block; /* インラインブロックにして高さを揃える */
+  line-height: 1; /* 行の高さを1に設定し、リンクの高さを調整 */
+}
+
+.nav-list a:hover {
+  background-color: #0056b3; /* ホバー時の背景色 */
+  color: #ffffff; /* ホバー時のテキスト色 */
+}
+
+/* ログアウトリンクのスタイル */
+.logout-link {
+  border-radius: 4px;
+  padding: 10px 15px;
+}
+
+.logout-link:hover {
+  background-color: #c82333; /* ホバー時のログアウトリンクの背景色 */
+}

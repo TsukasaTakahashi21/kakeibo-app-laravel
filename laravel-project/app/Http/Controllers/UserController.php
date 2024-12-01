@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ConfirmInfoRequest;
+use App\Http\Requests\LoginRequest;
+use App\Services\SessionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Hash;
-use App\Models\User;
-use Illuminate\Support\Facades\Redis;
-
 use App\UseCase\User\SignUpInput;
 use App\UseCase\User\SignUpInteractor;
 use App\UseCase\User\SignInInput;
@@ -16,6 +14,16 @@ use App\UseCase\User\SignInInteractor;
 
 class UserController extends Controller
 {
+    private $sessionService;
+    private $signUpInteractor;
+    private $signInInteractor;
+
+    public function __construct(SessionService $sessionService, SignUpInteractor $signUpInteractor, SignInInteractor $signInInteractor)
+    {
+        $this->sessionService = $sessionService;
+        $this->signUpInteractor = $signUpInteractor;
+        $this->signInInteractor = $signInInteractor;
+    }
 
     public function signUp()
     {
@@ -32,50 +40,37 @@ class UserController extends Controller
         return view('user/signIn');
     }
 
-    public function confirm_info(Request $request)
+    public function confirm_info(ConfirmInfoRequest $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:30',
-            'email' => 'required|string|email|max:50',
-            'password' => 'required|string|min:6|confirmed',
-        ], [
-            'name.required' => 'UserNameの入力がありません',
-            'email.required' => 'Emailの入力がありません',
-            'password.required' => 'Passwordの入力がありません',
-            'password.confirmed' => 'パスワードが一致しません',
-        ]);
-
-        session([
-            'name' => $validatedData['name'],
-            'email' => $validatedData['email'],
-            'password' => $validatedData['password'],
-        ]);
+        $this->sessionService->saveUserInfo($request->name,  $request->email, $request->password);
 
         return view('user.signUp_confirm', [
-            'name' => $validatedData['name'],
-            'email' => $validatedData['email'],
+            'name' => $request->name,
+            'email' => $request->email,
         ]);
     }
 
-    public function register(Request $request)
+    public function register()
     {
-        if (!session()->has(['name', 'email'])) {
+        $userName = $this->sessionService->getUserInfo()['name'];
+        $userEmail = $this->sessionService->getUserInfo()['email'];
+
+        if (!$userName || !$userEmail) {
             return redirect()->route('signUp')->withErrors([
                 'register_error' => '会員登録情報が無効です。再度入力してください。'
             ]);
         }
 
         try {
+            $userInfo = $this->sessionService->getUserInfo();
             $input = new SignUpInput(
-                session('name'),
-                session('email'),
-                $request->input('password'),
+                $userInfo['name'], 
+                $userInfo['email'], 
+                $userInfo['password']
             );
     
-            $interactor = new SignUpInteractor();
-            $interactor->handle($input);
-    
-            $request->session()->flush();
+            $this->signUpInteractor->handle($input);
+            $this->sessionService->clearUserInfo();
     
             return redirect()->route('signIn');
         } catch (\Exception $e) {
@@ -83,24 +78,14 @@ class UserController extends Controller
         }
     }
 
-
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $validatedData = $request->validate([
-            'email' => 'required|string|email|max:50',
-            'password' => 'required|string|min:6',
-        ], [
-            'email.required' => 'メールアドレスを入力してください',
-            'password.required' => 'パスワードを入力してください',
-        ]);
-
         $input = new SignInInput(
-            $validatedData['email'],
-            $validatedData['password'],
+            $request->input('email'),
+            $request->input('password'),
         );
 
-        $interactor = new SignInInteractor();
-        if (!$interactor->handle($input)) {
+        if (!$this->signInInteractor->handle($input)) {
             return redirect()->route('signUp')->withErrors([
                 'login_error' => 'メールアドレスまたはパスワードが違います'
             ])->withInput();
@@ -109,12 +94,10 @@ class UserController extends Controller
         return redirect()->intended('top');
     }
 
-
     public function logout()
     {
         Auth::logout();
-        session()->flush();
+        $this->sessionService->clearUserInfo();
         return redirect()->route('signUp');
     }
-
 }

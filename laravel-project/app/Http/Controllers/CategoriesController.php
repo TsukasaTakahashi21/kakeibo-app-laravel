@@ -2,12 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\CategoryRequest;
 use App\Models\Categories;
 use Illuminate\Support\Facades\Auth;
+use App\UseCase\Categories\CreateCategoryInput;
+use App\UseCase\Categories\CreateCategoryInteractor;
+use App\UseCase\Categories\EditCategoryInput;
+use App\UseCase\Categories\EditCategoryInteractor;
+use App\UseCase\Categories\DeleteCategoryInteractor;
+use App\ValueObject\categoryName;
 
 class CategoriesController extends Controller
 {
+    private $createCategoryInteractor;
+    private $editCategoryInteractor;
+    private $deleteCategoryInteractor;
+
+    public function __construct(CreateCategoryInteractor $createCategoryInteractor, EditCategoryInteractor $editCategoryInteractor, DeleteCategoryInteractor $deleteCategoryInteractor)
+    {
+        $this->createCategoryInteractor = $createCategoryInteractor;
+        $this->editCategoryInteractor = $editCategoryInteractor;
+        $this->deleteCategoryInteractor = $deleteCategoryInteractor;
+    }
 
     public function index()
     {
@@ -16,60 +32,44 @@ class CategoriesController extends Controller
         return view('spendings.categories', compact('categories'));
     }
 
-
     public function create()
     {
         return view('spendings.create_categories');
     }
 
-    public function store(Request $request, $id)
+    public function store(CategoryRequest $request)
     {
-        $validatedData = $request->validate([
-            'category_name' => 'required|string|max:50|unique:categories,name' . $id,
-        ], [
-            'category_name.required' => 'カテゴリ名が入力されていません',
-            'category_name.unique' => 'すでに登録済みのカテゴリです',
-        ]);
-
         $userId = Auth::id();
+        $categoryName = new CategoryName($request['category_name']);
 
-        $category = new Categories();
-        $category->name = $validatedData['category_name'];
-        $category->user_id = $userId;
-        $category->save();
+        $input = new CreateCategoryInput($categoryName, $userId);
+
+        $this->createCategoryInteractor->handle($input);
 
         return redirect()->route('index');
     }
 
-
-    public function edit($id)
+    public function edit(int $id)
     {
-        $category = categories::where('id', $id)->where('user_id', Auth::id())->firstOrFail($id);
+        $category = categories::where('id', $id)
+            ->where('user_id', Auth::id())->firstOrFail();
         return view('spendings.edit_categories', compact('category'));
     }
 
-    public function update(Request $request, $id)
+    public function update(CategoryRequest $request, int $id)
     {
-        $validatedData = $request->validate([
-            'category_name' => 'required|string|max:50|unique:categories,name',
-        ], [
-            'category_name.required' => 'カテゴリ名が入力されていません',
-            'category_name.unique' => 'すでに登録済みのカテゴリです',
-        ]);
+        $categoryName = new CategoryName($request->category_name);
 
-        $category = Categories::where('id', $id)->where('user_id', Auth::id())->firstOrFail($id);
-        $category->name = $validatedData['category_name'];
-        $category->save();
+        $input = new EditCategoryInput($categoryName, $id);
+
+        $this->editCategoryInteractor->handle($input);
 
         return redirect()->route('index');
     }
 
-
-    public function destroy($id)
+    public function destroy(int $id)
     {
-        $category = Categories::where('id', $id)->where('user_id', Auth::id())->firstOrFail($id);
-        $category->delete();
-
+        $this->deleteCategoryInteractor->handle($id);
         return redirect()->route('index');
     }
 }
